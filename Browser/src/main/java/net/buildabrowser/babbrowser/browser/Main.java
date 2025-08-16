@@ -14,11 +14,11 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import net.buildabrowser.babbrowser.browser.dom.Document;
 import net.buildabrowser.babbrowser.browser.net.ProtocolRegistry;
-import net.buildabrowser.babbrowser.browser.parser.HTMLParser;
 import net.buildabrowser.babbrowser.browser.render.core.box.Box;
 import net.buildabrowser.babbrowser.browser.render.core.box.BoxGenerator;
+import net.buildabrowser.babbrowser.htmlparser.HTMLParser;
+import net.buildabrowser.babbrowser.spec.dom.Document;
 
 public class Main {
   

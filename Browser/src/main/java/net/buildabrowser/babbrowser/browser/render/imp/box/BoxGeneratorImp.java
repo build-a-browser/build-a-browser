@@ -3,12 +3,12 @@ package net.buildabrowser.babbrowser.browser.render.imp.box;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.buildabrowser.babbrowser.browser.dom.Document;
-import net.buildabrowser.babbrowser.browser.dom.Element;
-import net.buildabrowser.babbrowser.browser.dom.Node;
-import net.buildabrowser.babbrowser.browser.dom.Text;
 import net.buildabrowser.babbrowser.browser.render.core.box.Box;
 import net.buildabrowser.babbrowser.browser.render.core.box.BoxGenerator;
+import net.buildabrowser.babbrowser.spec.dom.Document;
+import net.buildabrowser.babbrowser.spec.dom.Element;
+import net.buildabrowser.babbrowser.spec.dom.Node;
+import net.buildabrowser.babbrowser.spec.dom.Text;
 
 public class BoxGeneratorImp implements BoxGenerator {
   

@@ -1,4 +1,4 @@
-package net.buildabrowser.babbrowser.browser.dom;
+package net.buildabrowser.babbrowser.spec.dom;
 
 import java.util.List;
 

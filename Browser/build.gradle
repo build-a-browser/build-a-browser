@@ -1,20 +1,11 @@
 plugins {
     id 'application'
-    id 'java'
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    implementation project(':HTMLParser')
 }
 
 application {
     mainClass = 'net.buildabrowser.babbrowser.browser.Main'
-}
-
-test {
-    useJUnitPlatform()
 }

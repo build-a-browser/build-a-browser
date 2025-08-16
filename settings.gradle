@@ -1,2 +1,2 @@
 rootProject.name = 'buildabrowser'
-include('Browser')
+include(':Browser', ':HTMLParser', ':Spec')

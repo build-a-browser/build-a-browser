@@ -1,10 +1,10 @@
-package net.buildabrowser.babbrowser.browser.parser;
+package net.buildabrowser.babbrowser.htmlparser;
 
 import java.io.IOException;
 import java.io.Reader;
 
-import net.buildabrowser.babbrowser.browser.dom.Document;
-import net.buildabrowser.babbrowser.browser.parser.imp.HTMLParserImp;
+import net.buildabrowser.babbrowser.htmlparser.imp.HTMLParserImp;
+import net.buildabrowser.babbrowser.spec.dom.Document;
 
 public interface HTMLParser {
   

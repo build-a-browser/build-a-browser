@@ -1,15 +1,15 @@
-package net.buildabrowser.babbrowser.browser.parser.imp;
+package net.buildabrowser.babbrowser.htmlparser.imp;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
-import net.buildabrowser.babbrowser.browser.dom.Document;
-import net.buildabrowser.babbrowser.browser.dom.Element;
-import net.buildabrowser.babbrowser.browser.dom.Node;
-import net.buildabrowser.babbrowser.browser.dom.Text;
-import net.buildabrowser.babbrowser.browser.parser.HTMLParser;
+import net.buildabrowser.babbrowser.htmlparser.HTMLParser;
+import net.buildabrowser.babbrowser.spec.dom.Document;
+import net.buildabrowser.babbrowser.spec.dom.Element;
+import net.buildabrowser.babbrowser.spec.dom.Node;
+import net.buildabrowser.babbrowser.spec.dom.Text;
 
 public class HTMLParserImp implements HTMLParser {
 

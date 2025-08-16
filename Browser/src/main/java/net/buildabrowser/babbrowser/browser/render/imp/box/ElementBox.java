@@ -6,8 +6,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import net.buildabrowser.babbrowser.browser.dom.Element;
 import net.buildabrowser.babbrowser.browser.render.core.box.Box;
+import net.buildabrowser.babbrowser.spec.dom.Element;
 
 public class ElementBox implements Box {
 
