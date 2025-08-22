@@ -27,6 +27,7 @@ public class Main {
     URL url = new URI(args[0]).toURL();
     try (InputStream inputStream = protocolRegistry.request(url)) {
       Document document = HTMLParser.create().parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+      System.out.println(document);
       showWindow(document);
     }
   }

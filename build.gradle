@@ -13,7 +13,12 @@ subprojects {
 
 	tasks.withType(Test).configureEach {
 		useJUnitPlatform()
-		failOnNoDiscoveredTests = false
+		// failOnNoDiscoveredTests = false
+	}
+
+	java {
+    sourceCompatibility = JavaVersion.VERSION_24
+    targetCompatibility = JavaVersion.VERSION_24
 	}
 
 }

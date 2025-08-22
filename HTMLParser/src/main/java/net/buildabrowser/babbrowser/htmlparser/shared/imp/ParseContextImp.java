@@ -2,6 +2,7 @@ package net.buildabrowser.babbrowser.htmlparser.shared.imp;
 
 import java.util.ArrayDeque;
 import java.util.LinkedList;
+import java.util.Map;
 
 import net.buildabrowser.babbrowser.htmlparser.shared.ParseContext;
 import net.buildabrowser.babbrowser.htmlparser.token.TagToken;
@@ -32,7 +33,10 @@ public class ParseContextImp implements ParseContext {
   @Override
   public void emitTagToken(TagToken tagToken) {
     if (tagToken.isStartTag()) {
-      pushElement(tagToken.name());
+      pushElement(tagToken.name(), tagToken.attributes());
+      if (tagToken.isSelfClosing()) {
+        closeActive();
+      }
     } else {
       assert nodes.peek() instanceof Element: "Expected to pop element!";
       Element e = (Element) nodes.peek();
@@ -41,8 +45,8 @@ public class ParseContextImp implements ParseContext {
     }
   }
 
-  private void pushElement(String name) {
-    Element element = new Element(name, new LinkedList<>());
+  private void pushElement(String name, Map<String, String> attributes) {
+    Element element = Element.create(name, new LinkedList<>(), attributes);
     switch (nodes.peek()) {
       case Document document -> document.children().add(element);
       case Element e -> e.children().add(element);
@@ -53,7 +57,7 @@ public class ParseContextImp implements ParseContext {
 
   private void closeActive() {
     if (!textBuffer.isEmpty()) {
-      Text text = new Text(textBuffer.toString());
+      Text text = Text.create(textBuffer.toString());
       textBuffer.setLength(0);
 
       switch (nodes.peek()) {

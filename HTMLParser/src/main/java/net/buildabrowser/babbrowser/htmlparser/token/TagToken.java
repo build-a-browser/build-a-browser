@@ -1,5 +1,7 @@
 package net.buildabrowser.babbrowser.htmlparser.token;
 
+import java.util.Map;
+
 import net.buildabrowser.babbrowser.htmlparser.token.imp.TagTokenImp;
 
 public interface TagToken {
@@ -9,6 +11,19 @@ public interface TagToken {
   void appendToName(int ch);
 
   String name();
+
+  void setSelfClosing(boolean b);
+
+  boolean isSelfClosing();
+
+  void startNewAttribute();
+
+  // TODO: Attribute object?
+  void appendToAttributeName(int ch);
+
+  void appendToAttributeValue(int ch);
+
+  Map<String, String> attributes();
 
   static TagToken create(boolean isStartTag) {
     return new TagTokenImp(isStartTag);

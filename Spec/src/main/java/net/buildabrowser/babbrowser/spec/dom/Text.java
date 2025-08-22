@@ -1,10 +1,13 @@
 package net.buildabrowser.babbrowser.spec.dom;
 
-public record Text(String text) implements Node {
+import net.buildabrowser.babbrowser.spec.dom.imp.TextImp;
 
-  @Override
-  public String toString() {
-    return text;
+public interface Text extends Node {
+
+  String text();
+
+  static Text create(String text) {
+    return new TextImp(text);
   }
 
 }

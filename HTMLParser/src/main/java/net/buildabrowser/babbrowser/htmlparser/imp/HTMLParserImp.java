@@ -17,7 +17,7 @@ public class HTMLParserImp implements HTMLParser {
   public Document parse(Reader streamReader) throws IOException {
     PushbackReader pushbackReader = new PushbackReader(streamReader, 2);
     TokenizeContext tokenizeContext = TokenizeContext.create(pushbackReader);
-    Document document = new Document(new LinkedList<>());
+    Document document = Document.create(new LinkedList<>());
     ParseContext parseContext = ParseContext.create(document);
 
     int ch = 0;

@@ -2,16 +2,14 @@ package net.buildabrowser.babbrowser.spec.dom;
 
 import java.util.List;
 
-public record Document(List<Node> children) implements Node {
+import net.buildabrowser.babbrowser.spec.dom.imp.DocumentImp;
+
+public interface Document extends Node {
+
+  List<Node> children();
   
-  @Override
-  public String toString() {
-    StringBuilder builder = new StringBuilder();
-    for (Node child: children) {
-      builder.append(child.toString());
-    }
-    
-    return builder.toString();
+  static Document create(List<Node> children) {
+    return new DocumentImp(children);
   }
 
 }
