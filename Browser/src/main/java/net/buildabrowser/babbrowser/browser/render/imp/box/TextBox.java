@@ -6,7 +6,7 @@ import javax.swing.JComponent;
 import javax.swing.JTextField;
 
 import net.buildabrowser.babbrowser.browser.render.core.box.Box;
-import net.buildabrowser.babbrowser.spec.dom.Text;
+import net.buildabrowser.babbrowser.dom.Text;
 
 public class TextBox implements Box {
   

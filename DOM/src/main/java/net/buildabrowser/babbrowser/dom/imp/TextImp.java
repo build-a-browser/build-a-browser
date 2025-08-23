@@ -1,6 +1,6 @@
-package net.buildabrowser.babbrowser.spec.dom.imp;
+package net.buildabrowser.babbrowser.dom.imp;
 
-import net.buildabrowser.babbrowser.spec.dom.Text;
+import net.buildabrowser.babbrowser.dom.Text;
 
 public record TextImp(String text) implements Text {
 

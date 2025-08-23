@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import net.buildabrowser.babbrowser.browser.net.exception.BadURLException;
 import net.buildabrowser.babbrowser.browser.net.util.URLUtil;
 import net.buildabrowser.babbrowser.browser.render.core.box.Box;
-import net.buildabrowser.babbrowser.spec.dom.Element;
+import net.buildabrowser.babbrowser.dom.Element;
 
 public class ImageBox implements Box {
 
@@ -88,7 +88,6 @@ public class ImageBox implements Box {
   private synchronized void loadBufferedImage(URL loadingImageURL) {
     try {
       this.image = ImageIO.read(loadingImageURL);
-      System.out.println("Invalidated");
       imageComponent.revalidate();
       imageComponent.repaint();
     } catch (IOException e) {

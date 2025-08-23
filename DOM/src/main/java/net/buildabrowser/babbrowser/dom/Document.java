@@ -1,8 +1,8 @@
-package net.buildabrowser.babbrowser.spec.dom;
+package net.buildabrowser.babbrowser.dom;
 
 import java.util.List;
 
-import net.buildabrowser.babbrowser.spec.dom.imp.DocumentImp;
+import net.buildabrowser.babbrowser.dom.imp.DocumentImp;
 
 public interface Document extends Node {
 

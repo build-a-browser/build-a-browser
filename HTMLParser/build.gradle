@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-    api project(':Spec')
+    api project(':DOM')
 }

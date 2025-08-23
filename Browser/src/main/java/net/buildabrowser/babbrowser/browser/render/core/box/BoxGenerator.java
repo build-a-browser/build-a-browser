@@ -3,7 +3,7 @@ package net.buildabrowser.babbrowser.browser.render.core.box;
 import java.util.List;
 
 import net.buildabrowser.babbrowser.browser.render.imp.box.BoxGeneratorImp;
-import net.buildabrowser.babbrowser.spec.dom.Node;
+import net.buildabrowser.babbrowser.dom.Node;
 
 public interface BoxGenerator {
   

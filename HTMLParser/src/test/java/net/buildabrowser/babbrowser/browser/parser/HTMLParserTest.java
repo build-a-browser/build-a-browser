@@ -10,10 +10,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import net.buildabrowser.babbrowser.dom.Document;
+import net.buildabrowser.babbrowser.dom.Element;
+import net.buildabrowser.babbrowser.dom.Text;
 import net.buildabrowser.babbrowser.htmlparser.HTMLParser;
-import net.buildabrowser.babbrowser.spec.dom.Document;
-import net.buildabrowser.babbrowser.spec.dom.Element;
-import net.buildabrowser.babbrowser.spec.dom.Text;
 
 public class HTMLParserTest {
   

@@ -8,7 +8,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import net.buildabrowser.babbrowser.browser.render.core.box.Box;
-import net.buildabrowser.babbrowser.spec.dom.Document;
+import net.buildabrowser.babbrowser.dom.Document;
 
 public class DocumentBox implements Box {
 

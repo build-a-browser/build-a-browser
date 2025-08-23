@@ -5,10 +5,10 @@ import java.util.List;
 
 import net.buildabrowser.babbrowser.browser.render.core.box.Box;
 import net.buildabrowser.babbrowser.browser.render.core.box.BoxGenerator;
-import net.buildabrowser.babbrowser.spec.dom.Document;
-import net.buildabrowser.babbrowser.spec.dom.Element;
-import net.buildabrowser.babbrowser.spec.dom.Node;
-import net.buildabrowser.babbrowser.spec.dom.Text;
+import net.buildabrowser.babbrowser.dom.Document;
+import net.buildabrowser.babbrowser.dom.Element;
+import net.buildabrowser.babbrowser.dom.Node;
+import net.buildabrowser.babbrowser.dom.Text;
 
 public class BoxGeneratorImp implements BoxGenerator {
   

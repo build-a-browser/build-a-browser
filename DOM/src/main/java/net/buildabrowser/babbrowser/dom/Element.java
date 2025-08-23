@@ -1,9 +1,9 @@
-package net.buildabrowser.babbrowser.spec.dom;
+package net.buildabrowser.babbrowser.dom;
 
 import java.util.List;
 import java.util.Map;
 
-import net.buildabrowser.babbrowser.spec.dom.imp.ElementImp;
+import net.buildabrowser.babbrowser.dom.imp.ElementImp;
 
 public interface Element extends Node {
 

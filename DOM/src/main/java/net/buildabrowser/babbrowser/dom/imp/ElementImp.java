@@ -1,11 +1,11 @@
-package net.buildabrowser.babbrowser.spec.dom.imp;
+package net.buildabrowser.babbrowser.dom.imp;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.buildabrowser.babbrowser.spec.dom.Element;
-import net.buildabrowser.babbrowser.spec.dom.Node;
+import net.buildabrowser.babbrowser.dom.Element;
+import net.buildabrowser.babbrowser.dom.Node;
 
 public record ElementImp(String name, List<Node> children, Map<String, String> attributes) implements Element {
 

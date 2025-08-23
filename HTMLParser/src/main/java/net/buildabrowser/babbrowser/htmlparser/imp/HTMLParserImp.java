@@ -5,10 +5,10 @@ import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.LinkedList;
 
+import net.buildabrowser.babbrowser.dom.Document;
 import net.buildabrowser.babbrowser.htmlparser.HTMLParser;
 import net.buildabrowser.babbrowser.htmlparser.shared.ParseContext;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.TokenizeContext;
-import net.buildabrowser.babbrowser.spec.dom.Document;
 
 public class HTMLParserImp implements HTMLParser {
 

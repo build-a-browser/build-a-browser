@@ -1,9 +1,9 @@
-package net.buildabrowser.babbrowser.spec.dom.imp;
+package net.buildabrowser.babbrowser.dom.imp;
 
 import java.util.List;
 
-import net.buildabrowser.babbrowser.spec.dom.Document;
-import net.buildabrowser.babbrowser.spec.dom.Node;
+import net.buildabrowser.babbrowser.dom.Document;
+import net.buildabrowser.babbrowser.dom.Node;
 
 public record DocumentImp(List<Node> children) implements Document {
   

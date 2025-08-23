@@ -4,12 +4,12 @@ import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.Map;
 
+import net.buildabrowser.babbrowser.dom.Document;
+import net.buildabrowser.babbrowser.dom.Element;
+import net.buildabrowser.babbrowser.dom.Node;
+import net.buildabrowser.babbrowser.dom.Text;
 import net.buildabrowser.babbrowser.htmlparser.shared.ParseContext;
 import net.buildabrowser.babbrowser.htmlparser.token.TagToken;
-import net.buildabrowser.babbrowser.spec.dom.Document;
-import net.buildabrowser.babbrowser.spec.dom.Element;
-import net.buildabrowser.babbrowser.spec.dom.Node;
-import net.buildabrowser.babbrowser.spec.dom.Text;
 
 public class ParseContextImp implements ParseContext {
 

@@ -1,8 +1,8 @@
 package net.buildabrowser.babbrowser.htmlparser.shared;
 
+import net.buildabrowser.babbrowser.dom.Document;
 import net.buildabrowser.babbrowser.htmlparser.shared.imp.ParseContextImp;
 import net.buildabrowser.babbrowser.htmlparser.token.TagToken;
-import net.buildabrowser.babbrowser.spec.dom.Document;
 
 public interface ParseContext {
 

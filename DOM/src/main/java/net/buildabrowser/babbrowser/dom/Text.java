@@ -1,6 +1,6 @@
-package net.buildabrowser.babbrowser.spec.dom;
+package net.buildabrowser.babbrowser.dom;
 
-import net.buildabrowser.babbrowser.spec.dom.imp.TextImp;
+import net.buildabrowser.babbrowser.dom.imp.TextImp;
 
 public interface Text extends Node {
 
