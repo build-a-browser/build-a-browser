@@ -88,4 +88,16 @@ public class HTMLParserTest {
       document);
   }
 
+  @Test
+  @DisplayName("Can parse document with rawtext element")
+  public void canParseDocumentWithRawtextElement() throws IOException {
+    Document document = htmlParser.parse(new StringReader("<style>Hello <world>!</style>"));
+    Assertions.assertEquals(
+      Document.create(List.of(
+        Element.create("style", List.of(
+          Text.create("Hello <world>!")
+        )))),
+      document);
+  }
+
 }

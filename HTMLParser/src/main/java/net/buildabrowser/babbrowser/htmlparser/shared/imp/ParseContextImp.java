@@ -10,13 +10,17 @@ import net.buildabrowser.babbrowser.dom.Node;
 import net.buildabrowser.babbrowser.dom.Text;
 import net.buildabrowser.babbrowser.htmlparser.shared.ParseContext;
 import net.buildabrowser.babbrowser.htmlparser.token.TagToken;
+import net.buildabrowser.babbrowser.htmlparser.tokenize.TokenizeContext;
+import net.buildabrowser.babbrowser.htmlparser.tokenize.states.RawTextState;
 
 public class ParseContextImp implements ParseContext {
 
   private final ArrayDeque<Node> nodes = new ArrayDeque<>();
   private final StringBuilder textBuffer = new StringBuilder();
+  private final TokenizeContext tokenizeContext;
 
-  public ParseContextImp(Document document) {
+  public ParseContextImp(Document document, TokenizeContext tokenizeContext) {
+    this.tokenizeContext = tokenizeContext;
     nodes.push(document);
   }
 
@@ -34,6 +38,9 @@ public class ParseContextImp implements ParseContext {
   public void emitTagToken(TagToken tagToken) {
     if (tagToken.isStartTag()) {
       pushElement(tagToken.name(), tagToken.attributes());
+      if (tagToken.name().equals("style")) {
+        tokenizeContext.setTokenizeState(new RawTextState());
+      }
       if (tagToken.isSelfClosing()) {
         closeActive();
       }

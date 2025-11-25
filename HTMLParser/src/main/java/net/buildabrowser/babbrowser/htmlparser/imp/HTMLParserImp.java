@@ -18,7 +18,7 @@ public class HTMLParserImp implements HTMLParser {
     PushbackReader pushbackReader = new PushbackReader(streamReader, 2);
     TokenizeContext tokenizeContext = TokenizeContext.create(pushbackReader);
     Document document = Document.create(new LinkedList<>());
-    ParseContext parseContext = ParseContext.create(document);
+    ParseContext parseContext = ParseContext.create(document, tokenizeContext);
 
     int ch = 0;
     while ((ch = pushbackReader.read()) != EOF) {
