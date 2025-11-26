@@ -1,9 +1,9 @@
 package net.buildabrowser.babbrowser.dom.algo;
 
-import net.buildabrowser.babbrowser.css.cssom.CSSStyleSheet;
-import net.buildabrowser.babbrowser.css.parser.CSSParser;
-import net.buildabrowser.babbrowser.css.parser.CSSParser.CSSTokenStream;
-import net.buildabrowser.babbrowser.css.tokenizer.CSSTokenizerInput;
+import net.buildabrowser.babbrowser.cssbase.cssom.CSSStyleSheet;
+import net.buildabrowser.babbrowser.cssbase.parser.CSSParser;
+import net.buildabrowser.babbrowser.cssbase.parser.CSSParser.CSSTokenStream;
+import net.buildabrowser.babbrowser.cssbase.tokenizer.CSSTokenizerInput;
 import net.buildabrowser.babbrowser.dom.Element;
 import net.buildabrowser.babbrowser.dom.mutable.MutableDocument;
 import net.buildabrowser.babbrowser.dom.utils.CommonUtils;

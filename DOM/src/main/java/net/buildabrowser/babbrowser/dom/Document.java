@@ -2,8 +2,8 @@ package net.buildabrowser.babbrowser.dom;
 
 import java.util.List;
 
-import net.buildabrowser.babbrowser.css.cssom.DocumentOrShadowRoot;
-import net.buildabrowser.babbrowser.css.cssom.StyleSheetList;
+import net.buildabrowser.babbrowser.cssbase.cssom.DocumentOrShadowRoot;
+import net.buildabrowser.babbrowser.cssbase.cssom.StyleSheetList;
 import net.buildabrowser.babbrowser.dom.imp.DocumentImp;
 
 public interface Document extends Node, DocumentOrShadowRoot {

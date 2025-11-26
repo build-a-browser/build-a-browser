@@ -1,0 +1,38 @@
+package net.buildabrowser.babbrowser.cssbase.parser;
+
+import java.io.IOException;
+import java.util.List;
+
+import net.buildabrowser.babbrowser.cssbase.cssom.CSSRuleList;
+import net.buildabrowser.babbrowser.cssbase.cssom.CSSStyleSheet;
+import net.buildabrowser.babbrowser.cssbase.cssom.Declaration;
+import net.buildabrowser.babbrowser.cssbase.parser.imp.ActiveCSSTokenStream;
+import net.buildabrowser.babbrowser.cssbase.parser.imp.CSSParserImp;
+import net.buildabrowser.babbrowser.cssbase.tokenizer.CSSTokenizerInput;
+import net.buildabrowser.babbrowser.cssbase.tokens.Token;
+
+public interface CSSParser {
+  
+  CSSStyleSheet parseAStyleSheet(CSSTokenStream tokenStream) throws IOException;
+
+  CSSRuleList parseARuleList(CSSTokenStream tokenStream) throws IOException;
+
+  List<Declaration> parseAStyleBlocksContents(CSSTokenStream tokenStream) throws IOException;
+
+  static interface CSSTokenStream {
+    
+    Token read() throws IOException;
+
+    void unread(Token token);
+
+    static CSSTokenStream create(CSSTokenizerInput input) {
+      return new ActiveCSSTokenStream(input);
+    }
+
+  }
+
+  static CSSParser create() {
+    return new CSSParserImp();
+  }
+
+}

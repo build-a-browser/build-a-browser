@@ -2,7 +2,7 @@ package net.buildabrowser.babbrowser.dom.imp;
 
 import java.util.List;
 
-import net.buildabrowser.babbrowser.css.cssom.StyleSheetList;
+import net.buildabrowser.babbrowser.cssbase.cssom.StyleSheetList;
 import net.buildabrowser.babbrowser.dom.Document;
 import net.buildabrowser.babbrowser.dom.Node;
 

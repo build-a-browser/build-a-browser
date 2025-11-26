@@ -3,7 +3,7 @@ package net.buildabrowser.babbrowser.dom.mutable.imp;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.buildabrowser.babbrowser.css.cssom.mutable.MutableStyleSheetList;
+import net.buildabrowser.babbrowser.cssbase.cssom.mutable.MutableStyleSheetList;
 import net.buildabrowser.babbrowser.dom.Document;
 import net.buildabrowser.babbrowser.dom.Node;
 import net.buildabrowser.babbrowser.dom.mutable.MutableDocument;
