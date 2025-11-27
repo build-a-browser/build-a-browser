@@ -8,6 +8,4 @@ public interface MutableNode extends Node {
 
   Object getContext();
 
-  Node immutable();
-
 }

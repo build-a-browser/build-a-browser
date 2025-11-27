@@ -10,6 +10,7 @@ import net.buildabrowser.babbrowser.dom.Text;
 import net.buildabrowser.babbrowser.dom.algo.StyleAlgos;
 import net.buildabrowser.babbrowser.dom.mutable.MutableDocument;
 import net.buildabrowser.babbrowser.dom.mutable.MutableElement;
+import net.buildabrowser.babbrowser.dom.mutable.MutableText;
 import net.buildabrowser.babbrowser.htmlparser.shared.ParseContext;
 import net.buildabrowser.babbrowser.htmlparser.token.TagToken;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.TokenizeContext;
@@ -64,8 +65,8 @@ public class ParseContextImp implements ParseContext {
   private void pushElement(String name, Map<String, String> attributes) {
     Element element = MutableElement.create(name, attributes);
     switch (nodes.peek()) {
-      case Document document -> document.children().add(element);
-      case Element e -> e.children().add(element);
+      case Document document -> document.appendChild(element);
+      case Element e -> e.appendChild(element);
       default -> throw new UnsupportedOperationException("Don't know how to push to this element!");
     }
     nodes.push(element);
@@ -74,12 +75,12 @@ public class ParseContextImp implements ParseContext {
 
   private void closeActive() {
     if (!textBuffer.isEmpty()) {
-      Text text = Text.create(textBuffer.toString());
+      Text text = MutableText.create(textBuffer.toString());
       textBuffer.setLength(0);
 
       switch (nodes.peek()) {
-        case Document document -> document.children().add(text);
-        case Element element -> element.children().add(text);
+        case Document document -> document.appendChild(text);
+        case Element element -> element.appendChild(text);
         default -> throw new UnsupportedOperationException("Don't know how to push to this element!");
       }
       document.onNodeAdded(text);

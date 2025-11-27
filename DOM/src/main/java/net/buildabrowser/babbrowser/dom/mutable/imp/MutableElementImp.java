@@ -1,23 +1,16 @@
 package net.buildabrowser.babbrowser.dom.mutable.imp;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
-import net.buildabrowser.babbrowser.dom.Element;
 import net.buildabrowser.babbrowser.dom.Node;
 import net.buildabrowser.babbrowser.dom.mutable.MutableElement;
-import net.buildabrowser.babbrowser.dom.mutable.MutableNode;
 
-public class MutableElementImp implements MutableElement {
+public class MutableElementImp extends MutableNodeImp implements MutableElement {
 
-  private final List<Node> children = new LinkedList<>();
   private final Map<String, String> attributes = new HashMap<>();
 
   private final String name;
-
-  private Object context;
 
   public MutableElementImp(String name) {
     this.name = name;
@@ -34,23 +27,8 @@ public class MutableElementImp implements MutableElement {
   }
 
   @Override
-  public List<Node> children() {
-    return this.children;
-  }
-
-  @Override
   public Map<String, String> attributes() {
     return this.attributes;
-  }
-
-  @Override
-  public void setContext(Object context) {
-    this.context = context;
-  }
-
-  @Override
-  public Object getContext() {
-    return this.context;
   }
 
   @Override
@@ -70,7 +48,7 @@ public class MutableElementImp implements MutableElement {
       builder.append('"');
     }
     builder.append(">");
-    for (Node child: children) {
+    for (Node child: childNodes()) {
       builder.append(child.toString());
     }
     builder
@@ -79,14 +57,6 @@ public class MutableElementImp implements MutableElement {
       .append(">");
     
     return builder.toString();
-  }
-
-  @Override
-  public Element immutable() {
-    return Element.create(
-      name,
-      children.stream().map(e -> e instanceof MutableNode n ? n.immutable() : e).toList(),
-      attributes);
   }
 
 }

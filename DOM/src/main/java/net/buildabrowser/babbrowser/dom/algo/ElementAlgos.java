@@ -10,7 +10,7 @@ public final class ElementAlgos {
 
   public static String childTextContent(Element element) {
     StringBuilder textElements = new StringBuilder();
-    for (Node child: element.children()) {
+    for (Node child: element.childNodes()) {
       if (child instanceof Text text) {
         textElements.append(text.text());
       }

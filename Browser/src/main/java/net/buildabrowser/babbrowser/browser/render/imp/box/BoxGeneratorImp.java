@@ -8,6 +8,7 @@ import net.buildabrowser.babbrowser.browser.render.core.box.BoxGenerator;
 import net.buildabrowser.babbrowser.dom.Document;
 import net.buildabrowser.babbrowser.dom.Element;
 import net.buildabrowser.babbrowser.dom.Node;
+import net.buildabrowser.babbrowser.dom.NodeList;
 import net.buildabrowser.babbrowser.dom.Text;
 
 public class BoxGeneratorImp implements BoxGenerator {
@@ -17,7 +18,7 @@ public class BoxGeneratorImp implements BoxGenerator {
     Box box = switch (node) {
       case Text text -> new TextBox(text);
       case Element element -> createElementBox(element);
-      case Document document -> new DocumentBox(document, createChildBoxes(document.children()));
+      case Document document -> new DocumentBox(document, createChildBoxes(document.childNodes()));
       default -> throw new UnsupportedOperationException("Unsupported Box Type");
     };
 
@@ -27,12 +28,12 @@ public class BoxGeneratorImp implements BoxGenerator {
   private Box createElementBox(Element element) {
     return switch (element.name()) {
       case "img" -> new ImageBox(element);
-      default -> new ElementBox(element, createChildBoxes(element.children()));
+      default -> new ElementBox(element, createChildBoxes(element.childNodes()));
     };
   }
 
-  private List<Box> createChildBoxes(List<Node> children) {
-    List<Box> childBoxes = new ArrayList<>(children.size());
+  private List<Box> createChildBoxes(NodeList children) {
+    List<Box> childBoxes = new ArrayList<>((int) children.length());
     for (Node childNode: children) {
       childBoxes.addAll(box(childNode));
     }

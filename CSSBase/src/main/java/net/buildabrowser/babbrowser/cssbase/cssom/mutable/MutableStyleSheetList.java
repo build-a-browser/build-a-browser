@@ -12,6 +12,4 @@ public interface MutableStyleSheetList extends StyleSheetList {
     return new MutableStyleSheetListImp();
   }
 
-  StyleSheetList immutable();
-
 }

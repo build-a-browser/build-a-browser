@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.buildabrowser.babbrowser.cssbase.cssom.CSSStyleSheet;
-import net.buildabrowser.babbrowser.cssbase.cssom.StyleSheetList;
 import net.buildabrowser.babbrowser.cssbase.cssom.mutable.MutableStyleSheetList;
 
 public class MutableStyleSheetListImp implements MutableStyleSheetList {
@@ -33,11 +32,6 @@ public class MutableStyleSheetListImp implements MutableStyleSheetList {
   @Override
   public void addStylesheet(CSSStyleSheet styleSheet) {
     styleSheets.add(styleSheet);
-  }
-
-  @Override
-  public StyleSheetList immutable() {
-    return StyleSheetList.create(styleSheets);
   }
   
 }
