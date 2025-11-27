@@ -10,9 +10,13 @@ public class MutableDocumentImp extends MutableNodeImp implements MutableDocumen
   private final MutableStyleSheetList styleSheets = MutableStyleSheetList.create();
   private final DocumentChangeListener changeListener;
 
-
   public MutableDocumentImp(DocumentChangeListener changeListener) {
     this.changeListener = changeListener;
+  }
+
+  @Override
+  public MutableDocument ownerDocument() {
+    return this;
   }
 
   @Override

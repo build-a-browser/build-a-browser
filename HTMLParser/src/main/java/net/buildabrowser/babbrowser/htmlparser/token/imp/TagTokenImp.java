@@ -24,6 +24,11 @@ public class TagTokenImp implements TagToken {
     this.isStartTag = isStartTag;
   }
 
+  public TagTokenImp(boolean isStartTag, String name) {
+    this.isStartTag = isStartTag;
+    nameBuilder.append(name);
+  }
+
   @Override
   public boolean isStartTag() {
     return this.isStartTag;

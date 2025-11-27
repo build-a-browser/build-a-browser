@@ -20,7 +20,7 @@ public class MutableStyleSheetListImp implements MutableStyleSheetList {
 
   @Override
   public CSSStyleSheet item(long index) {
-    assert index <= Integer.MAX_VALUE && index > 0;
+    assert index <= Integer.MAX_VALUE && index >= 0;
     return styleSheets.get((int) index);
   }
 

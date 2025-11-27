@@ -1,14 +1,13 @@
 package net.buildabrowser.babbrowser.dom.mutable;
 
-import java.util.Map;
-
 import net.buildabrowser.babbrowser.dom.Element;
+import net.buildabrowser.babbrowser.dom.Namespace;
 import net.buildabrowser.babbrowser.dom.mutable.imp.MutableElementImp;
 
 public interface MutableElement extends Element, MutableNode {
 
-  static MutableElement create(String name, Map<String,String> attributes) {
-    return new MutableElementImp(name, attributes);
+  static MutableElement create(String name, MutableDocument nodeDocument) {
+    return new MutableElementImp(name, Namespace.HTML_NAMESPACE, nodeDocument);
   }
 
 }

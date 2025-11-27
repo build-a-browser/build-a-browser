@@ -29,4 +29,8 @@ public interface TagToken {
     return new TagTokenImp(isStartTag);
   }
 
+  static TagToken create(boolean isStartTag, String name) {
+    return new TagTokenImp(isStartTag, name);
+  }
+
 }

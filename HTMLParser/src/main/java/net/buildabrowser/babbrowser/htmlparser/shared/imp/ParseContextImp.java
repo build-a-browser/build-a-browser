@@ -1,91 +1,107 @@
 package net.buildabrowser.babbrowser.htmlparser.shared.imp;
 
-import java.util.ArrayDeque;
-import java.util.Map;
-
-import net.buildabrowser.babbrowser.dom.Document;
-import net.buildabrowser.babbrowser.dom.Element;
-import net.buildabrowser.babbrowser.dom.Node;
-import net.buildabrowser.babbrowser.dom.Text;
-import net.buildabrowser.babbrowser.dom.algo.StyleAlgos;
 import net.buildabrowser.babbrowser.dom.mutable.MutableDocument;
 import net.buildabrowser.babbrowser.dom.mutable.MutableElement;
-import net.buildabrowser.babbrowser.dom.mutable.MutableText;
+import net.buildabrowser.babbrowser.htmlparser.insertion.InsertionMode;
+import net.buildabrowser.babbrowser.htmlparser.insertion.InsertionModes;
+import net.buildabrowser.babbrowser.htmlparser.insertion.OpenElementStack;
 import net.buildabrowser.babbrowser.htmlparser.shared.ParseContext;
 import net.buildabrowser.babbrowser.htmlparser.token.TagToken;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.TokenizeContext;
-import net.buildabrowser.babbrowser.htmlparser.tokenize.imp.TokenizeStates;
 
 public class ParseContextImp implements ParseContext {
 
-  private final ArrayDeque<Node> nodes = new ArrayDeque<>();
-  private final StringBuilder textBuffer = new StringBuilder();
+  private final OpenElementStack openElementStack = OpenElementStack.create();
 
-  private final MutableDocument document; // TODO: Remove?
+  private final MutableDocument document;
   private final TokenizeContext tokenizeContext;
+
+  private InsertionMode currentInsertionMode;
+  private InsertionMode originalInsertionMode;
+  @SuppressWarnings("unused")
+  private MutableElement headElementPointer;
 
   public ParseContextImp(MutableDocument document, TokenizeContext tokenizeContext) {
     this.document = document;
     this.tokenizeContext = tokenizeContext;
-    nodes.push(document);
+    this.currentInsertionMode = InsertionModes.initialInsertionMode;
   }
 
   @Override
   public void emitCharacterToken(int ch) {
-    textBuffer.appendCodePoint(ch);
+    boolean shouldReprocess;
+    do {
+      shouldReprocess = currentInsertionMode.emitCharacterToken(this, ch);
+    } while (shouldReprocess);
   }
 
   @Override
   public void emitEOFToken() {
-    closeActive();
+    boolean shouldReprocess;
+    do {
+      shouldReprocess = currentInsertionMode.emitEOFToken(this);
+    } while (shouldReprocess);
   }
 
   @Override
   public void emitTagToken(TagToken tagToken) {
-    if (tagToken.isStartTag()) {
-      pushElement(tagToken.name(), tagToken.attributes());
-      if (tagToken.name().equals("style")) {
-        tokenizeContext.setTokenizeState(TokenizeStates.rawTextState);
-      }
-      if (tagToken.isSelfClosing()) {
-        closeActive();
-      }
-    } else {
-      assert nodes.peek() instanceof Element: "Expected to pop element!";
-      Element e = (Element) nodes.peek();
-      assert e.name().equals(tagToken.name()): "Existing tag was " + e.name() + " but new tag is " + tagToken.name();
-      closeActive();
-
-      if (tagToken.name().equals("style")) {
-        StyleAlgos.updateAStyleBlock(e, document);
-      }
-    }
+    boolean shouldReprocess;
+    do {
+      shouldReprocess = currentInsertionMode.emitTagToken(this, tagToken);
+    } while (shouldReprocess);
   }
 
-  private void pushElement(String name, Map<String, String> attributes) {
-    Element element = MutableElement.create(name, attributes);
-    switch (nodes.peek()) {
-      case Document document -> document.appendChild(element);
-      case Element e -> e.appendChild(element);
-      default -> throw new UnsupportedOperationException("Don't know how to push to this element!");
-    }
-    nodes.push(element);
-    document.onNodeAdded(element);
+  @Override
+  public void setInsertionMode(InsertionMode insertionMode) {
+    this.currentInsertionMode = insertionMode;
   }
 
-  private void closeActive() {
-    if (!textBuffer.isEmpty()) {
-      Text text = MutableText.create(textBuffer.toString());
-      textBuffer.setLength(0);
+  @Override
+  public InsertionMode currentInsertionMode() {
+    return this.currentInsertionMode;
+  }
 
-      switch (nodes.peek()) {
-        case Document document -> document.appendChild(text);
-        case Element element -> element.appendChild(text);
-        default -> throw new UnsupportedOperationException("Don't know how to push to this element!");
-      }
-      document.onNodeAdded(text);
-    }
-    nodes.pop();
+  @Override
+  public InsertionMode originalInsertionMode() {
+    return this.originalInsertionMode;
+  }
+
+  @Override
+  public void setOriginalInsertionMode(InsertionMode mode) {
+    this.originalInsertionMode = mode;
+  }
+
+  @Override
+  public OpenElementStack openElementStack() {
+    return this.openElementStack;
+  }
+
+  @Override
+  public MutableDocument document() {
+    return this.document;
+  }
+
+  @Override
+  public void parseError() {}
+
+  @Override
+  public void setTheHeadElementPointer(MutableElement element) {
+    this.headElementPointer = element;
+  }
+
+  @Override
+  public void setFramesetOk(boolean b) {
+    // TODO: Implement
+  }
+
+  @Override
+  public void stopParsing() {
+    // Hopefully, HTMLParserImp will stop for us...
+  }
+
+  @Override
+  public TokenizeContext tokenizeContext() {
+    return this.tokenizeContext;
   }
   
 }

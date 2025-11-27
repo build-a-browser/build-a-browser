@@ -20,7 +20,7 @@ public class TextBox implements Box {
 
   @Override
   public JComponent render(ActiveStyles parentStyles) {
-    String formattedText = text.text().trim().replaceAll("[ \n\t\r]+", " ");
+    String formattedText = text.data().trim().replaceAll("[ \n\t\r]+", " ");
     JTextField textArea = new JTextField(formattedText);
     textArea.setMaximumSize(new Dimension(
       (int) textArea.getMaximumSize().getWidth(),

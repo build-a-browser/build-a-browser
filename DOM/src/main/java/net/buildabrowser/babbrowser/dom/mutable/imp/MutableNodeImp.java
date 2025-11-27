@@ -7,14 +7,13 @@ import net.buildabrowser.babbrowser.dom.Node;
 import net.buildabrowser.babbrowser.dom.mutable.MutableNode;
 import net.buildabrowser.babbrowser.dom.mutable.MutableNodeList;
 
-public class MutableNodeImp implements MutableNode {
+public abstract class MutableNodeImp implements MutableNode {
 
   private List<MutableNode> childNodes = new LinkedList<>();
   private final MutableNodeList nodeList = MutableNodeList.create(childNodes);
 
   private Object context;
 
-  // TODO: NodeList
   @Override
   public MutableNodeList childNodes() {
     return nodeList;
@@ -22,8 +21,9 @@ public class MutableNodeImp implements MutableNode {
 
   @Override
   public Node appendChild(Node node) {
-    // TODO: Use the spec method. Also, the case is not so great
+    // TODO: Use the spec method. Also, the cast is not so great
     childNodes.add((MutableNode) node);
+    ownerDocument().onNodeAdded(node); // Custom addition
     return node;
   }
 

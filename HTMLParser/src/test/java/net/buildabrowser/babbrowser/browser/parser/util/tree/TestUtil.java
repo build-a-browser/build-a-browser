@@ -1,5 +1,8 @@
 package net.buildabrowser.babbrowser.browser.parser.util.tree;
 
+import static net.buildabrowser.babbrowser.browser.parser.util.tree.TestDocument.testDocument;
+import static net.buildabrowser.babbrowser.browser.parser.util.tree.TestElement.testElement;
+
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -10,7 +13,23 @@ import net.buildabrowser.babbrowser.dom.Node;
 import net.buildabrowser.babbrowser.dom.NodeList;
 import net.buildabrowser.babbrowser.dom.Text;
 
-public class TestUtil {
+public final class TestUtil {
+
+  private TestUtil() {}
+
+  public static TestDocument testDocumentToBody(TestNode... children) {
+    return testDocument(
+      testElement("html",
+        testElement("head"),
+        testElement("body", children)));
+  }
+
+  public static TestDocument testDocumentToHead(TestNode... children) {
+    return testDocument(
+      testElement("html",
+        testElement("head", children),
+        testElement("body")));
+  }
   
   public static void assertTreeMatches(TestNode reference, Node node) {
     switch (reference) {
@@ -53,7 +72,7 @@ public class TestUtil {
       return;
     }
 
-    Assertions.assertEquals(refText.text(), text.text());
+    Assertions.assertEquals(refText.text(), text.data());
   }
 
   private static void assertNodeListMatches(List<TestNode> children, NodeList childNodes) {

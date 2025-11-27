@@ -2,14 +2,10 @@ package net.buildabrowser.babbrowser.dom;
 
 public interface Node {
   
-  public NodeList childNodes();
+  Document ownerDocument();
 
-  public Node appendChild(Node node);
+  NodeList childNodes();
 
-  // Non-spec
-
-  void setContext(Object context);
-
-  Object getContext();
+  Node appendChild(Node node);
 
 }

@@ -1,10 +1,10 @@
 package net.buildabrowser.babbrowser.browser.parser;
 
-import static net.buildabrowser.babbrowser.browser.parser.util.tree.TestDocument.testDocument;
 import static net.buildabrowser.babbrowser.browser.parser.util.tree.TestElement.testElement;
 import static net.buildabrowser.babbrowser.browser.parser.util.tree.TestText.testText;
-
 import static net.buildabrowser.babbrowser.browser.parser.util.tree.TestUtil.assertTreeMatches;
+import static net.buildabrowser.babbrowser.browser.parser.util.tree.TestUtil.testDocumentToBody;
+import static net.buildabrowser.babbrowser.browser.parser.util.tree.TestUtil.testDocumentToHead;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -31,7 +31,7 @@ public class HTMLParserTest {
   @DisplayName("Can parse empty document")
   public void canParseEmptyDocument() throws IOException {
     Document document = htmlParser.parse(new StringReader(""));
-    assertTreeMatches(testDocument(), document);
+    assertTreeMatches(testDocumentToBody(), document);
   }
   
   @Test
@@ -39,7 +39,7 @@ public class HTMLParserTest {
   public void canParseDocumentWithText() throws IOException {
     Document document = htmlParser.parse(new StringReader("Hello, World!"));
     assertTreeMatches(
-      testDocument(testText("Hello, World!")),
+      testDocumentToBody(testText("Hello, World!")),
       document);
   }
 
@@ -48,7 +48,7 @@ public class HTMLParserTest {
   public void canParseDocumentWithDiv() throws IOException {
     Document document = htmlParser.parse(new StringReader("<div>Hello, World!</div>"));
     assertTreeMatches(
-      testDocument(
+      testDocumentToBody(
         testElement("div", 
           testText("Hello, World!"))),
       document);
@@ -59,7 +59,7 @@ public class HTMLParserTest {
   public void canParseDocumentWithSelfClosingTag() throws IOException {
     Document document = htmlParser.parse(new StringReader("<img/><div>Hello, World!</div>"));
     assertTreeMatches(
-      testDocument(
+      testDocumentToBody(
         testElement("img"),
         testElement("div", 
           testText("Hello, World!"))),
@@ -71,7 +71,7 @@ public class HTMLParserTest {
   public void canParseDocumentWithElementWithOneAttribute() throws IOException {
     Document document = htmlParser.parse(new StringReader("<img href=\"file.png\"/>"));
     assertTreeMatches(
-      testDocument(
+      testDocumentToBody(
         testElement("img", Map.of(
           "href", "file.png"
         ))),
@@ -83,7 +83,7 @@ public class HTMLParserTest {
   public void canParseDocumentWithElementWithTwoAttributes() throws IOException {
     Document document = htmlParser.parse(new StringReader("<img href=\"file.png\" alt=\"Image\"/>"));
     assertTreeMatches(
-      testDocument(
+      testDocumentToBody(
         testElement("img", Map.of(
           "href", "file.png",
           "alt", "Image"
@@ -96,7 +96,7 @@ public class HTMLParserTest {
   public void canParseDocumentWithRawtextElement() throws IOException {
     Document document = htmlParser.parse(new StringReader("<style>p{}</style>"));
     assertTreeMatches(
-      testDocument(
+      testDocumentToHead(
         testElement("style",
           testText("p{}"))),
       document);
