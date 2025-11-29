@@ -10,16 +10,15 @@ import net.buildabrowser.babbrowser.cssbase.parser.CSSParser.SeekableCSSTokenStr
 
 public class ColorParser implements PropertyValueParser {
 
-  private PropertyValueParser colorBaseParser = new ColorBaseParser();
+  private final PropertyValueParser colorBaseParser = new ColorBaseParser();
+
 
   @Override
   public CSSValue parse(SeekableCSSTokenStream stream, ActiveStyles activeStyles) throws IOException {
-    CSSValue value = PropertyValueParserUtil.parseLongest(stream,
-      colorBaseParser);
+    CSSValue value = colorBaseParser.parse(stream, null);
 
     System.out.println(value);
     if (value instanceof ColorValue colorValue) {
-      System.out.println(colorValue.asSARGB());
       activeStyles.setTextColor(colorValue.asSARGB());
     }
     return value;

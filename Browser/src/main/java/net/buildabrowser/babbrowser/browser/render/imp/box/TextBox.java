@@ -28,7 +28,6 @@ public class TextBox implements Box {
     textArea.setEditable(false);
     textArea.setBorder(null);
     textArea.setOpaque(false);
-    System.out.println(parentStyles.textColor());
     textArea.setForeground(new Color(parentStyles.textColor(), true));
 
     return textArea;

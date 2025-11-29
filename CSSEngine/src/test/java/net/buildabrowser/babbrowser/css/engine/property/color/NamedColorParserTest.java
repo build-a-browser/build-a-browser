@@ -9,19 +9,19 @@ import org.junit.jupiter.api.Test;
 import net.buildabrowser.babbrowser.css.engine.property.CSSValue;
 import net.buildabrowser.babbrowser.css.engine.property.color.ColorValue.SRGBAColor;
 import net.buildabrowser.babbrowser.cssbase.parser.CSSParser.CSSTokenStream;
-import net.buildabrowser.babbrowser.cssbase.tokens.HashToken;
+import net.buildabrowser.babbrowser.cssbase.tokens.IdentToken;
 
-public class HexColorParserTest {
+public class NamedColorParserTest {
 
-  private final HexColorParser hexColorParser = new HexColorParser();
+  private final NamedColorParser namedColorParser = new NamedColorParser();
   
   @Test
-  @DisplayName("Can parse six-component color")
-  public void canParseSixComponentColor() throws IOException {
-    CSSValue value = hexColorParser.parse(
-      CSSTokenStream.create(HashToken.create("babbab", HashToken.Type.ID)),
+  @DisplayName("Can parse named color")
+  public void canParseNamedColor() throws IOException {
+    CSSValue value = namedColorParser.parse(
+      CSSTokenStream.create(IdentToken.create("rebeccapurple")),
       null);
-    Assertions.assertEquals(SRGBAColor.create(186, 187, 171, 255), value);
+    Assertions.assertEquals(SRGBAColor.create(102, 51, 153, 255), value);
   }
 
 }

@@ -41,7 +41,7 @@ public class HexColorParser implements PropertyValueParser {
       return COMPONENT_NOT_VALID_FAILURE;
     }
 
-    return new SRGBAColor(c1, c2, c3, 255);
+    return SRGBAColor.create(c1, c2, c3, 255);
   }
 
   private CSSValue parse4Components(String hexValue) {
@@ -54,7 +54,7 @@ public class HexColorParser implements PropertyValueParser {
       return COMPONENT_NOT_VALID_FAILURE;
     }
 
-    return new SRGBAColor(c1, c2, c3, c4);
+    return SRGBAColor.create(c1, c2, c3, c4);
   }
 
   private CSSValue parse6Components(String hexValue) {
@@ -66,7 +66,7 @@ public class HexColorParser implements PropertyValueParser {
       return COMPONENT_NOT_VALID_FAILURE;
     }
 
-    return new SRGBAColor(c1, c2, c3, 255);
+    return SRGBAColor.create(c1, c2, c3, 255);
   }
 
   private CSSValue parse8Components(String hexValue) {
@@ -79,7 +79,7 @@ public class HexColorParser implements PropertyValueParser {
       return COMPONENT_NOT_VALID_FAILURE;
     }
 
-    return new SRGBAColor(c1, c2, c3, c4);
+    return SRGBAColor.create(c1, c2, c3, c4);
   }
 
   private int parseSingleComponent(String hexValue, int index) {

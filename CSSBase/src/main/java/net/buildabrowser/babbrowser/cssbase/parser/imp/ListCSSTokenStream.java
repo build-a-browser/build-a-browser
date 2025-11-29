@@ -35,6 +35,10 @@ public class ListCSSTokenStream implements SeekableCSSTokenStream {
     if (unread != null) {
       throw new UnsupportedOperationException("Exceeded max one unread token");
     }
+    if (token == tokens.get(position - 1)) {
+      position--;
+      return;
+    }
 
     unread = token;
   }
