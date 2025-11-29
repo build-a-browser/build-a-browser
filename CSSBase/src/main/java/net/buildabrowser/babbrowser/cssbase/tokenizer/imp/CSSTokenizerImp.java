@@ -5,7 +5,9 @@ import java.io.IOException;
 import net.buildabrowser.babbrowser.cssbase.tokenizer.CSSTokenizer;
 import net.buildabrowser.babbrowser.cssbase.tokenizer.CSSTokenizerInput;
 import net.buildabrowser.babbrowser.cssbase.tokens.ColonToken;
+import net.buildabrowser.babbrowser.cssbase.tokens.DelimToken;
 import net.buildabrowser.babbrowser.cssbase.tokens.EOFToken;
+import net.buildabrowser.babbrowser.cssbase.tokens.HashToken;
 import net.buildabrowser.babbrowser.cssbase.tokens.LCBracketToken;
 import net.buildabrowser.babbrowser.cssbase.tokens.RCBracketToken;
 import net.buildabrowser.babbrowser.cssbase.tokens.SemicolonToken;
@@ -21,6 +23,7 @@ public class CSSTokenizerImp implements CSSTokenizer {
     int ch = stream.read();
     return switch (ch) {
       case '\n', ' ', '\t' -> consumeWhitespace(stream);
+      case '#' -> consumeNumberSign(stream);
       case ':' -> ColonToken.create();
       case ';' -> SemicolonToken.create();
       case '{' -> LCBracketToken.create();
@@ -44,6 +47,18 @@ public class CSSTokenizerImp implements CSSTokenizer {
     stream.unread(ch);
 
     return WhitespaceToken.create();
+  }
+
+  private Token consumeNumberSign(CSSTokenizerInput stream) throws IOException {
+    if (TokenizerUtil.isIdentCodePoint(stream.peek()) || TokenizerUtil.isValidEscape(stream)) {
+      boolean isId = TokenizerUtil.wouldStartAnIdentSequence(stream);
+      String seq = identTokenizer.consumeIdentSequence(stream);
+      return HashToken.create(
+        seq,
+        isId ? HashToken.Type.ID : HashToken.Type.UNRESTRICTED);
+    }
+
+    return DelimToken.create(stream.read());
   }
   
 }

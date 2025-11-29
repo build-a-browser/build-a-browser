@@ -16,7 +16,7 @@ public class IdentTokenizer {
     return IdentToken.create(result);
   }
 
-  private String consumeIdentSequence(CSSTokenizerInput stream) throws IOException {
+  public String consumeIdentSequence(CSSTokenizerInput stream) throws IOException {
     strBuilder.setLength(0);
 
     int ch;

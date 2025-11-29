@@ -12,6 +12,7 @@ import net.buildabrowser.babbrowser.cssbase.tokenizer.CSSTokenizer;
 import net.buildabrowser.babbrowser.cssbase.tokenizer.CSSTokenizerInput;
 import net.buildabrowser.babbrowser.cssbase.tokens.ColonToken;
 import net.buildabrowser.babbrowser.cssbase.tokens.EOFToken;
+import net.buildabrowser.babbrowser.cssbase.tokens.HashToken;
 import net.buildabrowser.babbrowser.cssbase.tokens.IdentToken;
 import net.buildabrowser.babbrowser.cssbase.tokens.LCBracketToken;
 import net.buildabrowser.babbrowser.cssbase.tokens.RCBracketToken;
@@ -38,6 +39,15 @@ public class CSSTokenizerTest {
     // Ensure it was as much whitespace as possible
     token = cssTokenizer.consumeAToken(input);
     Assertions.assertEquals(EOFToken.create(), token);
+  }
+
+  @Test
+  @DisplayName("Can tokenize a hash token")
+  public void canTokenizeAHashToken() throws IOException {
+    Token token = cssTokenizer.consumeAToken(stringInput("#bab"));
+    Assertions.assertEquals(
+      HashToken.create("bab", HashToken.Type.ID),
+      token);
   }
 
   @Test

@@ -41,7 +41,7 @@ public class ListCSSTokenStream implements SeekableCSSTokenStream {
 
   @Override
   public int position() {
-    return this.position();
+    return this.position;
   }
 
   @Override

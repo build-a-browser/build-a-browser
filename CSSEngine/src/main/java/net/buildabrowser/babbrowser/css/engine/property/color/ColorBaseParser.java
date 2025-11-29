@@ -8,21 +8,15 @@ import net.buildabrowser.babbrowser.css.engine.property.PropertyValueParserUtil;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
 import net.buildabrowser.babbrowser.cssbase.parser.CSSParser.SeekableCSSTokenStream;
 
-public class ColorParser implements PropertyValueParser {
+public class ColorBaseParser implements PropertyValueParser {
 
-  private PropertyValueParser colorBaseParser = new ColorBaseParser();
+  private final PropertyValueParser hexColorParser = new HexColorParser();
 
   @Override
   public CSSValue parse(SeekableCSSTokenStream stream, ActiveStyles activeStyles) throws IOException {
-    CSSValue value = PropertyValueParserUtil.parseLongest(stream,
-      colorBaseParser);
-
-    System.out.println(value);
-    if (value instanceof ColorValue colorValue) {
-      System.out.println(colorValue.asSARGB());
-      activeStyles.setTextColor(colorValue.asSARGB());
-    }
-    return value;
+    return PropertyValueParserUtil.parseLongest(stream,
+      hexColorParser
+    );
   }
   
 }

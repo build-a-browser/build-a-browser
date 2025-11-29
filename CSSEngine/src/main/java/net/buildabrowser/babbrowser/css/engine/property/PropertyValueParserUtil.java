@@ -7,13 +7,13 @@ import net.buildabrowser.babbrowser.cssbase.parser.CSSParser.SeekableCSSTokenStr
 
 public final class PropertyValueParserUtil {
 
-  private final CSSFailure NO_VALID_RESULT = new CSSFailure("No valid result...");
+  private static final CSSFailure NO_VALID_RESULT = new CSSFailure("No valid result...");
   
   private PropertyValueParserUtil() {}
 
-  CSSValue parseLongest(SeekableCSSTokenStream stream, PropertyValueParser... parsers) throws IOException {
+  public static CSSValue parseLongest(SeekableCSSTokenStream stream, PropertyValueParser... parsers) throws IOException {
     CSSValue longestValue = NO_VALID_RESULT;
-    int longestPos = 0;
+    int longestPos = stream.position();
 
     int firstPos = stream.position();
     for (PropertyValueParser parser: parsers) {
@@ -25,6 +25,8 @@ public final class PropertyValueParserUtil {
 
       stream.seek(firstPos);
     }
+
+    stream.seek(longestPos);
 
     return longestValue;
   };
