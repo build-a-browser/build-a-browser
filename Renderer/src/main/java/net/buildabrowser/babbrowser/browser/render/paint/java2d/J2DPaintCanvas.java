@@ -1,0 +1,67 @@
+package net.buildabrowser.babbrowser.browser.render.paint.java2d;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.util.Stack;
+import java.util.function.Consumer;
+
+import net.buildabrowser.babbrowser.browser.render.paint.FontMetrics;
+import net.buildabrowser.babbrowser.browser.render.paint.Paint;
+import net.buildabrowser.babbrowser.browser.render.paint.PaintCanvas;
+
+public class J2DPaintCanvas implements PaintCanvas {
+
+  private final Stack<J2DPaint> paintStack = new Stack<>();
+  private final Graphics2D graphics;
+
+  public J2DPaintCanvas(Graphics2D graphics) {
+    this.graphics = graphics;
+    paintStack.push(new J2DPaint());
+  }
+
+  @Override
+  public void pushPaint() {
+    paintStack.push(new J2DPaint());
+    postPaintUpdate();
+  }
+
+  @Override
+  public void popPaint() {
+    paintStack.pop();
+    postPaintUpdate();
+  }
+
+  @Override
+  public void alterPaint(Consumer<Paint> func) {
+    func.accept(paintStack.peek());
+    postPaintUpdate();
+  }
+
+  @Override
+  public void drawBox(int x, int y, int w, int h) {
+    graphics.fillRect(x, y, w, h);
+  }
+
+  @Override
+  public void drawText(int x, int y, String text) {
+    graphics.drawChars(text.toCharArray(), 0, text.length(), x, y + fontMetrics().fontHeight());
+  }
+
+  @Override
+  public void drawImage(int x, int y, BufferedImage image) {
+    graphics.drawImage(image, x, y, image.getWidth(), image.getHeight(), null);
+  }
+
+  @Override
+  public FontMetrics fontMetrics() {
+    return new J2DFontMetrics(graphics.getFontMetrics());
+  }
+
+  private void postPaintUpdate() {
+    J2DPaint paint = paintStack.peek();
+    graphics.setColor(new Color(paint.getColor()));
+    graphics.setBackground(new Color(paint.getColor()));
+  }
+  
+}

@@ -7,7 +7,7 @@ import net.buildabrowser.babbrowser.dom.Node;
 
 public interface BoxGenerator {
   
-  List<Box> box(Node node);
+  List<Box> box(Box parentBox, Node node);
 
   static BoxGenerator create() {
     return new BoxGeneratorImp();
