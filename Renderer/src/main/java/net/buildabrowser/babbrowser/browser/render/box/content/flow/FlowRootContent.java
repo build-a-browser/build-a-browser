@@ -6,9 +6,10 @@ import net.buildabrowser.babbrowser.browser.render.box.Box;
 import net.buildabrowser.babbrowser.browser.render.box.BoxContent;
 import net.buildabrowser.babbrowser.browser.render.box.ElementBox;
 import net.buildabrowser.babbrowser.browser.render.box.ElementBox.BoxLevel;
-import net.buildabrowser.babbrowser.browser.render.box.content.flow.FlowFragment.ManagedBoxFragment;
-import net.buildabrowser.babbrowser.browser.render.box.content.flow.FlowFragment.TextFragment;
-import net.buildabrowser.babbrowser.browser.render.box.content.flow.FlowFragment.UnmanagedBoxFragment;
+import net.buildabrowser.babbrowser.browser.render.box.content.flow.fragment.FlowFragment;
+import net.buildabrowser.babbrowser.browser.render.box.content.flow.fragment.ManagedBoxFragment;
+import net.buildabrowser.babbrowser.browser.render.box.content.flow.fragment.TextFragment;
+import net.buildabrowser.babbrowser.browser.render.box.content.flow.fragment.UnmanagedBoxFragment;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutContext;
 import net.buildabrowser.babbrowser.browser.render.paint.PaintCanvas;
 import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue.InnerDisplayValue;
@@ -27,9 +28,7 @@ public class FlowRootContent implements BoxContent {
 
   @Override
   public void layout(LayoutContext layoutContext) {
-    int initX = box.dimensions().getLayoutX();
-    int initY = box.dimensions().getLayoutY();
-    BlockFormattingContext rootContext = new BlockFormattingContext(initX, initY, box);
+    BlockFormattingContext rootContext = new BlockFormattingContext(box);
     blockStack.clear();
     blockStack.add(rootContext);
     
@@ -65,11 +64,7 @@ public class FlowRootContent implements BoxContent {
   }
 
   private void addManagedBlockToBlock(LayoutContext layoutContext, ElementBox childBox) {
-    BlockFormattingContext parentContext = blockStack.peek();
-    int initX = parentContext.currentX();
-    int initY = parentContext.currentY();
-
-    BlockFormattingContext childContext = new BlockFormattingContext(initX, initY, childBox);
+    BlockFormattingContext childContext = new BlockFormattingContext(childBox);
     blockStack.push(childContext);
     for (Box childChildBox: childBox.childBoxes()) {
       addToBlock(layoutContext, childChildBox);
@@ -77,22 +72,23 @@ public class FlowRootContent implements BoxContent {
     ManagedBoxFragment newFragment = childContext.close();
     blockStack.pop();
 
+    BlockFormattingContext parentContext = blockStack.peek();
+    newFragment.setPosX(0, parentContext.currentY());
+
     parentContext.increaseY(newFragment.height());
     parentContext.minWidth(newFragment.width());
     parentContext.addFragment(newFragment);
   }
 
   private void addUnmanagedBlockToBlock(LayoutContext layoutContext, ElementBox elementBox) {
-    BlockFormattingContext parentContext = blockStack.peek();
-    int initX = parentContext.currentX();
-    int initY = parentContext.currentY();
-    
-    elementBox.dimensions().setLayoutPos(initX, initY);
     elementBox.content().layout(layoutContext);
     int height = elementBox.dimensions().getComputedHeight();
     int width = elementBox.dimensions().getComputedWidth();
 
-    UnmanagedBoxFragment newFragment = new UnmanagedBoxFragment(initX, initY, elementBox);
+    UnmanagedBoxFragment newFragment = new UnmanagedBoxFragment(elementBox);
+
+    BlockFormattingContext parentContext = blockStack.peek();
+    newFragment.setPosX(0, parentContext.currentY());
 
     parentContext.increaseY(height);
     parentContext.minWidth(width);
@@ -116,10 +112,11 @@ public class FlowRootContent implements BoxContent {
 
   private void paintManagedBoxFragement(ManagedBoxFragment fragment, PaintCanvas canvas) {
     canvas.alterPaint(paint -> paint.setColor(box.activeStyles().backgroundColor()));
-    canvas.drawBox(fragment.x(), fragment.y(), fragment.width(), fragment.height());
+    canvas.drawBox(fragment.posX(), fragment.posY(), fragment.width(), fragment.height());
     canvas.alterPaint(paint -> paint.setColor(box.activeStyles().textColor()));
     for (FlowFragment childFragment: fragment.fragments()) {
       canvas.pushPaint();
+      canvas.alterPaint(paint -> paint.incOffset(childFragment.posX(), childFragment.posY()));
       paintFragment(childFragment, canvas);
       canvas.popPaint();
     }

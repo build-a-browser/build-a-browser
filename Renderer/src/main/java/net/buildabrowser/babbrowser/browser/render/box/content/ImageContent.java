@@ -46,22 +46,19 @@ public class ImageContent implements BoxContent {
 
   @Override
   public void paint(PaintCanvas canvas) {
-    int x = box.dimensions().getLayoutX();
-    int y = box.dimensions().getLayoutY();
-
     canvas.alterPaint(paint -> paint.setColor(box.activeStyles().backgroundColor()));
     int width = box.dimensions().getComputedWidth();
     int height = box.dimensions().getComputedHeight();
-    canvas.drawBox(x, y, width, height);
+    canvas.drawBox(0, 0, width, height);
     canvas.alterPaint(paint -> paint.setColor(box.activeStyles().textColor()));
 
     if (image != null) {
-      canvas.drawImage(x, y, image);
+      canvas.drawImage(0, 0, image);
       return;
     }
 
     String alt = getImageAlt();
-    canvas.drawText(x, y, alt);
+    canvas.drawText(0, 0, alt);
   }
 
   private void loadImage() {

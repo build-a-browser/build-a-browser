@@ -4,29 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.buildabrowser.babbrowser.browser.render.box.ElementBox;
-import net.buildabrowser.babbrowser.browser.render.box.content.flow.FlowFragment.ManagedBoxFragment;
+import net.buildabrowser.babbrowser.browser.render.box.content.flow.fragment.FlowFragment;
+import net.buildabrowser.babbrowser.browser.render.box.content.flow.fragment.ManagedBoxFragment;
 
 public class BlockFormattingContext {
 
   private final ElementBox elementBox;
 
   private final List<FlowFragment> fragments;
-  private final int initX;
-  private final int initY;
 
   private int width;
   private int y;
 
-  public BlockFormattingContext(int x, int y, ElementBox elementBox) {
-    this.initX = x;
-    this.initY = y;
+  public BlockFormattingContext(ElementBox elementBox) {
     this.elementBox = elementBox;
 
     this.fragments = new ArrayList<>();
-  }
-
-  public int currentX() {
-    return this.initX;
   }
 
   public int currentY() {
@@ -46,9 +39,7 @@ public class BlockFormattingContext {
   }
 
   public ManagedBoxFragment close() {
-    return new ManagedBoxFragment(
-      initX, initY, width, y - initY,
-      elementBox, fragments);
+    return new ManagedBoxFragment(width, y, elementBox, fragments);
   }
 
 }

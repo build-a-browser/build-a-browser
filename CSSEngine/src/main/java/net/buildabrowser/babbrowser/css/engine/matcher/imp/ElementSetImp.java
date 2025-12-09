@@ -52,7 +52,7 @@ public class ElementSetImp implements ElementSet {
   }
 
   @Override
-  public ElementSet clone() {
+  public ElementSet copy() {
     Set<Element> newSet = new HashSet<>();
     newSet.addAll(rawSet);
     return new ElementSetImp(newSet);

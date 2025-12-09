@@ -6,13 +6,13 @@ import java.util.Set;
 import net.buildabrowser.babbrowser.css.engine.matcher.imp.ElementSetImp;
 import net.buildabrowser.babbrowser.dom.Element;
 
-public interface ElementSet extends Iterable<Element>, Cloneable {
+public interface ElementSet extends Iterable<Element> {
   
   void add(Element element);
 
   void remove(Element element);
 
-  ElementSet clone();
+  ElementSet copy();
 
   void intersect(ElementSet other);
 
@@ -26,7 +26,7 @@ public interface ElementSet extends Iterable<Element>, Cloneable {
   }
 
   static ElementSet unionMany(List<ElementSet> sets) {
-    ElementSet base = sets.get(0).clone();
+    ElementSet base = sets.get(0).copy();
     for (int i = 1; i < sets.size(); i++) {
       base.union(sets.get(i));
     }
@@ -35,7 +35,7 @@ public interface ElementSet extends Iterable<Element>, Cloneable {
   }
 
   static ElementSet intersectMany(List<ElementSet> sets) {
-    ElementSet base = sets.get(0).clone();
+    ElementSet base = sets.get(0).copy();
     for (int i = 1; i < sets.size(); i++) {
       base.intersect(sets.get(i));
     }

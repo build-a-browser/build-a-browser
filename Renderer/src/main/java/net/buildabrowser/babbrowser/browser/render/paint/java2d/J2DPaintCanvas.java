@@ -15,6 +15,8 @@ public class J2DPaintCanvas implements PaintCanvas {
   private final Stack<J2DPaint> paintStack = new Stack<>();
   private final Graphics2D graphics;
 
+  int currentTranslateX, currentTranslateY;
+
   public J2DPaintCanvas(Graphics2D graphics) {
     this.graphics = graphics;
     paintStack.push(new J2DPaint());
@@ -22,7 +24,10 @@ public class J2DPaintCanvas implements PaintCanvas {
 
   @Override
   public void pushPaint() {
-    paintStack.push(new J2DPaint());
+    J2DPaint paint = new J2DPaint();
+    J2DPaint parentPaint = paintStack.peek();
+    paintStack.push(paint);
+    paint.setOffset(parentPaint.offsetX(), parentPaint.offsetY());
     postPaintUpdate();
   }
 
@@ -62,6 +67,12 @@ public class J2DPaintCanvas implements PaintCanvas {
     J2DPaint paint = paintStack.peek();
     graphics.setColor(new Color(paint.getColor()));
     graphics.setBackground(new Color(paint.getColor()));
+
+    graphics.translate(
+      paint.offsetX() - currentTranslateX,
+      paint.offsetY() - currentTranslateY);
+    currentTranslateX = paint.offsetX();
+    currentTranslateY = paint.offsetY();
   }
   
 }

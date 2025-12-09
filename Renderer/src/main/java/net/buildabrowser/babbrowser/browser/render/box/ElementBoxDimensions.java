@@ -4,12 +4,6 @@ import net.buildabrowser.babbrowser.browser.render.box.imp.ElementBoxDimensionsI
 
 public interface ElementBoxDimensions {
 
-  void setLayoutPos(int x, int y);
-
-  int getLayoutX();
-
-  int getLayoutY();
-
   void setComputedSize(int w, int h);
 
   int getComputedWidth();
