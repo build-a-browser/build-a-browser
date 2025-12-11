@@ -14,7 +14,6 @@ public class OpenElementStackImp implements OpenElementStack {
 
   @Override
   public void pushNode(MutableNode node) {
-    System.out.println("Push " + node.toString());
     stack.push(node);
   }
 
@@ -31,7 +30,6 @@ public class OpenElementStackImp implements OpenElementStack {
   @Override
   public MutableNode popNode() {
     MutableNode node = stack.pop();
-    System.out.println("Pop " + node.toString());
     if (ParseElementUtil.isHTMLElementWithName(node, "style")) {
       StyleAlgos.updateAStyleBlock((MutableElement) node);
     }

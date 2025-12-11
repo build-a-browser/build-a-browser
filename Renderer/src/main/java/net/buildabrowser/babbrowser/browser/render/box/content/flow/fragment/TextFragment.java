@@ -4,7 +4,8 @@ public class TextFragment extends FlowFragment {
 
   private final String text;
 
-  public TextFragment(String text) {
+  public TextFragment(int width, int height, String text) {
+    super(width, height);
     this.text = text;
   }
 

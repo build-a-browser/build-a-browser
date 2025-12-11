@@ -28,6 +28,7 @@ public class J2DPaintCanvas implements PaintCanvas {
     J2DPaint parentPaint = paintStack.peek();
     paintStack.push(paint);
     paint.setOffset(parentPaint.offsetX(), parentPaint.offsetY());
+    paint.setColor(parentPaint.getColor());
     postPaintUpdate();
   }
 

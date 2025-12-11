@@ -6,7 +6,8 @@ public class UnmanagedBoxFragment extends FlowFragment {
 
   private final ElementBox box;
 
-  public UnmanagedBoxFragment(ElementBox box) {
+  public UnmanagedBoxFragment(int width, int height, ElementBox box) {
+    super(width, height);
     this.box = box;
   }
 
