@@ -9,10 +9,16 @@ import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.LineBox
 
 public class InlineFormattingContext {
  
-  private final List<LineBox> lineBoxes = new LinkedList<>();
-  private LineBox activeLineBox = new LineBox();
+  private final List<LineBox> lineBoxes;
+  private LineBox activeLineBox;
 
   public InlineFormattingContext() {
+    this(new LineBox());
+  }
+
+  private InlineFormattingContext(LineBox firstLineBox) {
+    this.lineBoxes = new LinkedList<>();
+    this.activeLineBox = firstLineBox;
     lineBoxes.add(activeLineBox);
   }
 
@@ -29,7 +35,7 @@ public class InlineFormattingContext {
   }
 
   public InlineFormattingContext split() {
-    return null;
+    return new InlineFormattingContext(lineBoxes.getLast().split());
   };
 
   public List<LineBoxFragment> fragments() {

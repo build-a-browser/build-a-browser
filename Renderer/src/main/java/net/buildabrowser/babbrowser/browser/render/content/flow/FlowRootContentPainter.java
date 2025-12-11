@@ -25,7 +25,7 @@ public final class FlowRootContentPainter {
   private static void paintManagedBoxFragement(PaintCanvas canvas, ManagedBoxFragment fragment) {
     ElementBox parentBox = fragment.box();
     canvas.alterPaint(paint -> paint.setColor(parentBox.activeStyles().backgroundColor()));
-    canvas.drawBox(fragment.posX(), fragment.posY(), fragment.width(), fragment.height());
+    canvas.drawBox(0, 0, fragment.width(), fragment.height());
     for (FlowFragment childFragment: fragment.fragments()) {
       canvas.pushPaint();
       canvas.alterPaint(paint -> paint.incOffset(childFragment.posX(), childFragment.posY()));

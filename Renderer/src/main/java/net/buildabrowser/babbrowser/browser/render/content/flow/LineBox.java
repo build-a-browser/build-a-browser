@@ -10,10 +10,15 @@ import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.Managed
 
 public class LineBox {
 
-  private final Stack<LineSegment> lineSegments = new Stack<>();
+  private final Stack<LineSegment> lineSegments;
 
   public LineBox() {
+    this.lineSegments = new Stack<>();
     lineSegments.add(new LineSegment(null, new LinkedList<>()));
+  }
+
+  private LineBox(Stack<LineSegment> segments) {
+    this.lineSegments = segments;
   }
 
   private int totalWidth = 0;
@@ -44,6 +49,21 @@ public class LineBox {
   public LineBoxFragment toFragment() {
     LineSegment activeSegment = lineSegments.peek();
     return new LineBoxFragment(totalWidth, activeSegment.height(), activeSegment.fragments());
+  }
+
+  public LineBox split() {
+    Stack<LineSegment> newSegments = new Stack<>();
+    for (int i = 0; i < lineSegments.size(); i++) {
+      LineSegment oldSegment = lineSegments.get(i);
+      LineSegment newSegment = new LineSegment(oldSegment.box(), new LinkedList<>());
+      newSegments.push(newSegment);
+    }
+
+    while (lineSegments.size() > 1) {
+      popElement();
+    }
+
+    return new LineBox(newSegments);
   }
 
 }

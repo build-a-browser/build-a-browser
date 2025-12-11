@@ -151,7 +151,10 @@ public class FlowRootContent implements BoxContent {
 
   private void addToInline(LayoutContext layoutContext, ElementBox elementBox) {
     if (elementBox.boxLevel().equals(BoxLevel.BLOCK_LEVEL)) {
-      // TODO: Handle block splitting an inline
+      InlineFormattingContext nextContext = inlineStack.peek().split();
+      stopInline();
+      addToBlock(layoutContext, elementBox);
+      inlineStack.push(nextContext);
     } else if (isInFlow(elementBox)) {
       addManagedBlockToInline(layoutContext, elementBox);
     } else {
@@ -160,12 +163,11 @@ public class FlowRootContent implements BoxContent {
   }
 
   private void addManagedBlockToInline(LayoutContext layoutContext, ElementBox elementBox) {
-    InlineFormattingContext parentContext = inlineStack.peek();
-    parentContext.pushElement(elementBox);
+    inlineStack.peek().pushElement(elementBox);
     for (Box childBox: elementBox.childBoxes()) {
       addToInline(layoutContext, childBox);
     }
-    parentContext.popElement();
+    inlineStack.peek().popElement();
   }
 
   private void addUnmanagedBlockToInline(LayoutContext layoutContext, ElementBox elementBox) {
