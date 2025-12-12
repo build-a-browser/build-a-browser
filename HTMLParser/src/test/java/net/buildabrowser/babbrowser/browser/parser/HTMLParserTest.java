@@ -104,4 +104,12 @@ public class HTMLParserTest {
     Assertions.assertEquals(1, document.styleSheets().length());
   }
 
+  @Test
+  @DisplayName("Can parse document with simple doctype")
+  public void canParseDocumentWithSimpleDoctype() throws IOException {
+    // TODO: DocumentType node
+    Document document = htmlParser.parse(new StringReader("<!doctype html>"));
+    assertTreeMatches(testDocumentToBody(), document);
+  }
+
 }

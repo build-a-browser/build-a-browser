@@ -3,6 +3,7 @@ package net.buildabrowser.babbrowser.htmlparser.tokenize.imp;
 import java.io.IOException;
 import java.io.PushbackReader;
 
+import net.buildabrowser.babbrowser.htmlparser.token.DoctypeToken;
 import net.buildabrowser.babbrowser.htmlparser.token.TagToken;
 import net.buildabrowser.babbrowser.htmlparser.token.imp.TagTokenImp;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.TokenizeContext;
@@ -13,6 +14,7 @@ public class TokenizeContextImp implements TokenizeContext {
   private final PushbackReader pushbackReader;
   private final TemporaryBuffer temporaryBuffer = new TemporaryBufferImp();
   private final TagTokenImp tagToken = new TagTokenImp();
+  private final DoctypeToken doctypeToken = DoctypeToken.create();
 
   private TokenizeState tokenizeState = TokenizeStates.dataState;
 
@@ -50,6 +52,18 @@ public class TokenizeContextImp implements TokenizeContext {
   @Override
   public TagToken currentTagToken() {
     return this.tagToken;
+  }
+
+
+
+  @Override
+  public DoctypeToken beginDoctypeToken() {
+    return this.doctypeToken; // TODO: Re-init
+  }
+
+  @Override
+  public DoctypeToken currentDoctypeToken() {
+    return this.doctypeToken;
   }
 
   private class TemporaryBufferImp implements TemporaryBuffer {

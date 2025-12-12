@@ -12,6 +12,9 @@ public class TagOpenState implements TokenizeState {
   @Override
   public void consume(int ch, TokenizeContext tokenizeContext, ParseContext parseContext) throws IOException {
     switch (ch) {
+      case '!':
+        tokenizeContext.setTokenizeState(TokenizeStates.markupDeclarationOpenState);
+        break;
       case '/':
         tokenizeContext.setTokenizeState(TokenizeStates.endTagOpenState);
         break;

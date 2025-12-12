@@ -1,6 +1,7 @@
 package net.buildabrowser.babbrowser.htmlparser.insertion;
 
 import net.buildabrowser.babbrowser.htmlparser.shared.ParseContext;
+import net.buildabrowser.babbrowser.htmlparser.token.DoctypeToken;
 import net.buildabrowser.babbrowser.htmlparser.token.TagToken;
 
 public interface InsertionMode {
@@ -10,5 +11,7 @@ public interface InsertionMode {
   boolean emitEOFToken(ParseContext parseContext);
 
   boolean emitTagToken(ParseContext parseContext, TagToken tagToken);
+
+  boolean emitDoctypeToken(ParseContext parseContext, DoctypeToken doctypeToken);
   
 }

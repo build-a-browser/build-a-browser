@@ -5,6 +5,7 @@ import net.buildabrowser.babbrowser.dom.mutable.MutableElement;
 import net.buildabrowser.babbrowser.htmlparser.insertion.InsertionMode;
 import net.buildabrowser.babbrowser.htmlparser.insertion.OpenElementStack;
 import net.buildabrowser.babbrowser.htmlparser.shared.imp.ParseContextImp;
+import net.buildabrowser.babbrowser.htmlparser.token.DoctypeToken;
 import net.buildabrowser.babbrowser.htmlparser.token.TagToken;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.TokenizeContext;
 
@@ -42,5 +43,7 @@ public interface ParseContext {
   public static ParseContext create(MutableDocument document, TokenizeContext tokenizeContext) {
     return new ParseContextImp(document, tokenizeContext);
   }
+
+  void emitDoctypeToken(DoctypeToken doctypeToken);
   
 }
