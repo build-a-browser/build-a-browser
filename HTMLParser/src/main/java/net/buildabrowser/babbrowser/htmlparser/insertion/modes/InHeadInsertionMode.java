@@ -7,6 +7,7 @@ import net.buildabrowser.babbrowser.htmlparser.insertion.InsertionModes;
 import net.buildabrowser.babbrowser.htmlparser.insertion.util.ParseElementUtil;
 import net.buildabrowser.babbrowser.htmlparser.insertion.util.ParseTextUtil;
 import net.buildabrowser.babbrowser.htmlparser.shared.ParseContext;
+import net.buildabrowser.babbrowser.htmlparser.token.DoctypeToken;
 import net.buildabrowser.babbrowser.htmlparser.token.TagToken;
 
 public class InHeadInsertionMode implements InsertionMode {
@@ -20,6 +21,12 @@ public class InHeadInsertionMode implements InsertionMode {
       default:
         return handleAnythingElse(parseContext);
     }
+  }
+
+  @Override
+  public boolean emitDoctypeToken(ParseContext parseContext, DoctypeToken doctypeToken) {
+    parseContext.parseError();
+    return false;
   }
 
   @Override

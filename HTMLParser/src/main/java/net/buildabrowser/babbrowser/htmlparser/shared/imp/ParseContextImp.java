@@ -6,6 +6,7 @@ import net.buildabrowser.babbrowser.htmlparser.insertion.InsertionMode;
 import net.buildabrowser.babbrowser.htmlparser.insertion.InsertionModes;
 import net.buildabrowser.babbrowser.htmlparser.insertion.OpenElementStack;
 import net.buildabrowser.babbrowser.htmlparser.shared.ParseContext;
+import net.buildabrowser.babbrowser.htmlparser.token.DoctypeToken;
 import net.buildabrowser.babbrowser.htmlparser.token.TagToken;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.TokenizeContext;
 
@@ -48,6 +49,14 @@ public class ParseContextImp implements ParseContext {
     boolean shouldReprocess;
     do {
       shouldReprocess = currentInsertionMode.emitTagToken(this, tagToken);
+    } while (shouldReprocess);
+  }
+
+  @Override
+  public void emitDoctypeToken(DoctypeToken doctypeToken) {
+    boolean shouldReprocess;
+    do {
+      shouldReprocess = currentInsertionMode.emitDoctypeToken(this, doctypeToken);
     } while (shouldReprocess);
   }
 
