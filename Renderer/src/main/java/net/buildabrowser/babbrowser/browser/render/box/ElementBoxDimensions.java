@@ -18,6 +18,18 @@ public interface ElementBoxDimensions {
 
   int preferredWidthConstraint();
 
+  void setIntrinsicWidth(int width);
+
+  void setInstrinsicHeight(int height);
+
+  void setIntrinsicRatio(float ratio);
+  
+  int intrinsicWidth();
+
+  int intrinsicHeight();
+
+  float intrinsicRatio();
+
   static ElementBoxDimensions create() {
     return new ElementBoxDimensionsImp();
   }

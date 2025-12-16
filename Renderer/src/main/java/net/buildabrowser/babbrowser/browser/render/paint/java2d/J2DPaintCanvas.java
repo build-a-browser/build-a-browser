@@ -60,6 +60,11 @@ public class J2DPaintCanvas implements PaintCanvas {
   }
 
   @Override
+  public void drawImage(int x, int y, int width, int height, BufferedImage image) {
+    graphics.drawImage(image, x, y, width, height, null);
+  }
+
+  @Override
   public FontMetrics fontMetrics() {
     return new J2DFontMetrics(graphics.getFontMetrics());
   }

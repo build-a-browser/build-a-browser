@@ -14,6 +14,7 @@ import net.buildabrowser.babbrowser.browser.render.box.ElementBox;
 import net.buildabrowser.babbrowser.browser.render.box.ElementBoxDimensions;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutContext;
+import net.buildabrowser.babbrowser.browser.render.layout.LayoutUtil;
 import net.buildabrowser.babbrowser.browser.render.paint.FontMetrics;
 import net.buildabrowser.babbrowser.browser.render.paint.PaintCanvas;
 
@@ -36,6 +37,9 @@ public class ImageContent implements BoxContent {
     if (image != null) {
       dimensions.setPreferredMinWidthConstraint(image.getWidth());
       dimensions.setPreferredWidthConstraint(image.getWidth());
+      dimensions.setIntrinsicWidth(image.getWidth());
+      dimensions.setInstrinsicHeight(image.getHeight());
+      dimensions.setIntrinsicRatio((float) image.getWidth() / (float) image.getHeight());
       return;
     }
 
@@ -46,24 +50,24 @@ public class ImageContent implements BoxContent {
     
     dimensions.setPreferredMinWidthConstraint(width);
     dimensions.setPreferredWidthConstraint(width);
+    dimensions.setIntrinsicWidth(width);
+    dimensions.setInstrinsicHeight(fm.fontHeight());
   }
 
   @Override
   public void layout(LayoutContext layoutContext, LayoutConstraint layoutConstraint) {
     loadImage();
 
+    ElementBoxDimensions dimensions = box.dimensions();
+    int realWidth = LayoutUtil.constraintOrDim(layoutConstraint, dimensions.getComputedWidth());
     if (image != null) {
-      box.dimensions().setComputedSize(image.getWidth(), image.getHeight());
+      int realHeight = (int) (realWidth * dimensions.intrinsicRatio());
+      box.dimensions().setComputedSize(realWidth, realHeight);
       return;
     }
 
-    String alt = getImageAlt();
-    FontMetrics fm = layoutContext.fontMetrics();
-    
-    int width = fm.stringWidth(alt);
-    int height = fm.fontHeight();
-    
-    box.dimensions().setComputedSize(width, height);
+    int realHeight = box.dimensions().getComputedHeight();
+    box.dimensions().setComputedSize(realWidth, realHeight);
   }
 
   @Override
@@ -75,7 +79,7 @@ public class ImageContent implements BoxContent {
     canvas.alterPaint(paint -> paint.setColor(box.activeStyles().textColor()));
 
     if (image != null) {
-      canvas.drawImage(0, 0, image);
+      canvas.drawImage(0, 0, width, height, image);
       return;
     }
 

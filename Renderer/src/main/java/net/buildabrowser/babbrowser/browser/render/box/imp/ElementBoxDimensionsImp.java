@@ -10,6 +10,10 @@ public class ElementBoxDimensionsImp implements ElementBoxDimensions {
   private int preferredMinWidthConstraint = 0;
   private int preferredWidthConstraint = 0;
 
+  private int intrinsicWidth = -1;
+  private int intrinsicHeight = -1;
+  private float intrinsicRatio = -1;
+
   @Override
   public void setComputedSize(int w, int h) {
     this.computedWidth = w;
@@ -44,6 +48,36 @@ public class ElementBoxDimensionsImp implements ElementBoxDimensions {
   @Override
   public int preferredWidthConstraint() {
     return this.preferredWidthConstraint;
+  }
+
+  @Override
+  public void setIntrinsicWidth(int width) {
+    this.intrinsicWidth = width;
+  }
+
+  @Override
+  public void setInstrinsicHeight(int height) {
+    this.intrinsicHeight = height;
+  }
+
+  @Override
+  public void setIntrinsicRatio(float ratio) {
+    this.intrinsicRatio = ratio;
+  }
+
+  @Override
+  public int intrinsicWidth() {
+    return this.intrinsicWidth;
+  }
+
+  @Override
+  public int intrinsicHeight() {
+    return this.intrinsicHeight;
+  }
+
+  @Override
+  public float intrinsicRatio() {
+    return this.intrinsicRatio;
   }
   
 }

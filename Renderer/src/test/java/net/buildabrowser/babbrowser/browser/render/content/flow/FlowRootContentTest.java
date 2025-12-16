@@ -254,17 +254,23 @@ public class FlowRootContentTest {
     assertFragmentEquals(expectedFragment, actualFragment);
   }
 
-  private ElementBox sizedReplacedBlockBox(int x, int y) {
+  private ElementBox sizedReplacedBlockBox(int width, int height) {
     ActiveStyles childrenStyles = ActiveStyles.create();
-    return new TestElementBox(
-      box -> new TestFixedSizeReplacedContent(box, x, y), BoxLevel.BLOCK_LEVEL, childrenStyles, List.of());
+    ElementBox myBox = new TestElementBox(
+      box -> new TestFixedSizeReplacedContent(box, width, height), BoxLevel.BLOCK_LEVEL, childrenStyles, List.of());
+    myBox.dimensions().setIntrinsicWidth(width);
+    myBox.dimensions().setInstrinsicHeight(height);
+    return myBox;
   }
 
-  private ElementBox sizedReplacedInlineBlockBox(int x, int y) {
+  private ElementBox sizedReplacedInlineBlockBox(int width, int height) {
     ActiveStyles styles = ActiveStyles.create();
     styles.setInnerDisplayValue(InnerDisplayValue.FLOW_ROOT);
-    return new TestElementBox(
-      box -> new TestFixedSizeReplacedContent(box, x, y), BoxLevel.INLINE_LEVEL, styles, List.of());
+    TestElementBox myBox = new TestElementBox(
+      box -> new TestFixedSizeReplacedContent(box, width, height), BoxLevel.INLINE_LEVEL, styles, List.of());
+    myBox.dimensions().setIntrinsicWidth(width);
+    myBox.dimensions().setInstrinsicHeight(height);
+    return myBox;
   }
 
 

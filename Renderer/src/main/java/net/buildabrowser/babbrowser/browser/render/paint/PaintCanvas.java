@@ -18,6 +18,8 @@ public interface PaintCanvas {
   // TODO: Replace with something more portable
   void drawImage(int x, int y, BufferedImage image);
 
+  void drawImage(int i, int j, int width, int height, BufferedImage image);
+
   FontMetrics fontMetrics();
 
 }

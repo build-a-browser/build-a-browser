@@ -27,7 +27,7 @@ public final class FlowWidthUtil {
       // TODO: Is this the right width to compare against?
       return LayoutConstraint.of(percentageValue.value() * parentConstraint.value() / 100);
     } else {
-      return parentConstraint;
+      return LayoutConstraint.AUTO;
     }
   }
 
@@ -39,8 +39,8 @@ public final class FlowWidthUtil {
     double baseValue = lengthValue.value().doubleValue();
     double sizeResult = switch (lengthValue.dimension()) {
       // TODO: Use real values for EM, EX
-      case EM -> layoutContext.fontMetrics().fontHeight();
-      case EX -> layoutContext.fontMetrics().fontHeight() / 2;
+      case EM -> baseValue * layoutContext.fontMetrics().fontHeight();
+      case EX -> baseValue * layoutContext.fontMetrics().fontHeight() / 2;
       case IN -> baseValue * 96;
       case CM -> baseValue * 96 / 2.54;
       case MM -> baseValue * 96 / 2.54 / 100;

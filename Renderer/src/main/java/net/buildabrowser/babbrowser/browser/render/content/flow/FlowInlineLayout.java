@@ -6,6 +6,7 @@ import java.util.Stack;
 import net.buildabrowser.babbrowser.browser.render.box.Box;
 import net.buildabrowser.babbrowser.browser.render.box.ElementBox;
 import net.buildabrowser.babbrowser.browser.render.box.ElementBox.BoxLevel;
+import net.buildabrowser.babbrowser.browser.render.box.ElementBoxDimensions;
 import net.buildabrowser.babbrowser.browser.render.box.TextBox;
 import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.FlowFragment;
 import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.LineBoxFragment;
@@ -13,8 +14,12 @@ import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.Managed
 import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.TextFragment;
 import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.UnmanagedBoxFragment;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint;
+import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint.LayoutConstraintType;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutContext;
+import net.buildabrowser.babbrowser.browser.render.layout.LayoutUtil;
 import net.buildabrowser.babbrowser.browser.render.paint.FontMetrics;
+import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
+import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles.SizingUnit;
 
 public class FlowInlineLayout {
 
@@ -69,14 +74,22 @@ public class FlowInlineLayout {
     inlineStack.peek().popElement();
   }
 
-  private void addUnmanagedBlockToInline(LayoutContext layoutContext, ElementBox elementBox, LayoutConstraint layoutConstraint) {
-    if (!layoutConstraint.isPreLayoutConstraint()) {
-      elementBox.content().layout(layoutContext, layoutConstraint);
+  private void addUnmanagedBlockToInline(LayoutContext layoutContext, ElementBox childBox, LayoutConstraint parentConstraint) {
+    ActiveStyles childStyles = childBox.activeStyles();
+    LayoutConstraint childConstraint = childBox.isReplaced() ?
+      determineInlineBlockReplacedWidth(
+        layoutContext, parentConstraint, childStyles, childBox.dimensions()) :
+      determineInlineBlockNonReplacedWidth(
+        layoutContext, parentConstraint, childStyles, childBox.dimensions());
+    
+    if (!parentConstraint.isPreLayoutConstraint()) {
+      childBox.content().layout(layoutContext, childConstraint);
     }
-    int width = elementBox.dimensions().getComputedWidth();
-    int height = elementBox.dimensions().getComputedHeight();
 
-    UnmanagedBoxFragment newFragment = new UnmanagedBoxFragment(width, height, elementBox);
+    int width = LayoutUtil.constraintOrDim(childConstraint, childBox.dimensions().getComputedWidth());
+    int height = childBox.dimensions().getComputedHeight();
+
+    UnmanagedBoxFragment newFragment = new UnmanagedBoxFragment(width, height, childBox);
 
     InlineFormattingContext parentContext = inlineStack.peek();
     parentContext.addFragment(newFragment);
@@ -108,6 +121,73 @@ public class FlowInlineLayout {
       if (child instanceof ManagedBoxFragment managedBoxFragment) {
         positionFragmentElements(managedBoxFragment.fragments());
       }
+    }
+  }
+
+  private LayoutConstraint determineInlineBlockNonReplacedWidth(
+    LayoutContext layoutContext,
+    LayoutConstraint parentConstraint,
+    ActiveStyles childStyles,
+    ElementBoxDimensions boxDimensions
+  ) {
+    LayoutConstraint baseWidth = FlowWidthUtil.evaluateBaseSize(
+      layoutContext, parentConstraint, childStyles.getSizingProperty(SizingUnit.WIDTH), childStyles);
+    
+    if (!baseWidth.type().equals(LayoutConstraintType.AUTO)) {
+      return baseWidth;
+    }
+
+    if (parentConstraint.isPreLayoutConstraint()) {
+      return parentConstraint;
+    }
+
+    int preferredMinWidth = boxDimensions.preferredMinWidthConstraint();
+    int preferredWidth = boxDimensions.preferredWidthConstraint();
+    int availableWidth = parentConstraint.value();
+    if (!parentConstraint.type().equals(LayoutConstraintType.BOUNDED)) {
+      return LayoutConstraint.of(preferredWidth);
+    }
+
+    return LayoutConstraint.of(Math.min(Math.max(preferredMinWidth, availableWidth), preferredWidth));
+  }
+
+  private LayoutConstraint determineInlineBlockReplacedWidth(
+    LayoutContext layoutContext,
+    LayoutConstraint parentConstraint,
+    ActiveStyles childStyles,
+    ElementBoxDimensions boxDimensions
+  ) {
+    LayoutConstraint baseWidth = FlowWidthUtil.evaluateBaseSize(
+      layoutContext, parentConstraint, childStyles.getSizingProperty(SizingUnit.WIDTH), childStyles);
+    
+    if (!baseWidth.type().equals(LayoutConstraintType.AUTO)) {
+      return baseWidth;
+    }
+
+    if (parentConstraint.isPreLayoutConstraint()) {
+      return parentConstraint;
+    }
+
+    if (
+      boxDimensions.intrinsicWidth() != -1
+      && boxDimensions.getComputedHeight() != -1
+    ) {
+      return LayoutConstraint.of(boxDimensions.intrinsicWidth());
+    } else if (
+      boxDimensions.intrinsicRatio() != -1
+      && boxDimensions.intrinsicHeight() != -1
+    ) { // TODO: Also consider specified height
+      int usedHeight = boxDimensions.intrinsicHeight();
+      int usedWidth = (int) (usedHeight * boxDimensions.intrinsicRatio());
+      return LayoutConstraint.of(usedWidth);
+    } else if (boxDimensions.intrinsicRatio() != -1) {
+      // TODO: Compute as for block non-replaced
+      return LayoutConstraint.of(boxDimensions.preferredWidthConstraint());
+    } else if (boxDimensions.intrinsicWidth() != -1) {
+      return LayoutConstraint.of(boxDimensions.intrinsicWidth());
+    } else {
+      // TODO: Check if window smaller than 300px
+      return LayoutConstraint.of(300);
     }
   }
 

@@ -8,6 +8,8 @@ import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.Managed
 import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.UnmanagedBoxFragment;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutContext;
+import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint.LayoutConstraintType;
+import net.buildabrowser.babbrowser.css.engine.property.CSSValue;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles.SizingUnit;
 
@@ -69,10 +71,10 @@ public class FlowBlockLayout {
     }
   }
 
-  private void addManagedBlockToBlock(LayoutContext layoutContext, ElementBox childBox, LayoutConstraint parentLayoutConstraint) {
+  private void addManagedBlockToBlock(LayoutContext layoutContext, ElementBox childBox, LayoutConstraint parentConstraint) {
     ActiveStyles childStyles = childBox.activeStyles();
-    LayoutConstraint childConstraint = FlowWidthUtil.evaluateBaseSize(
-      layoutContext, parentLayoutConstraint, childStyles.getSizingProperty(SizingUnit.WIDTH), childStyles);
+    LayoutConstraint childConstraint = evaluateNonReplacedBlockWidth(
+      layoutContext, parentConstraint, childStyles.getSizingProperty(SizingUnit.WIDTH), childStyles);
     // TODO: Factor in margins and stuff
 
     BlockFormattingContext childContext = new BlockFormattingContext(childBox);
@@ -104,6 +106,21 @@ public class FlowBlockLayout {
     parentContext.increaseY(height);
     parentContext.minWidth(width);
     parentContext.addFragment(newFragment);
+  }
+
+  private LayoutConstraint evaluateNonReplacedBlockWidth(
+    LayoutContext layoutContext,
+    LayoutConstraint parentConstraint,
+    CSSValue sizeValue,
+    ActiveStyles childStyles
+  ) {
+    LayoutConstraint determinedConstraint = FlowWidthUtil.evaluateBaseSize(
+      layoutContext, parentConstraint, sizeValue, childStyles);
+    if (!determinedConstraint.type().equals(LayoutConstraintType.AUTO)) {
+      return determinedConstraint;
+    }
+
+    return parentConstraint;
   }
 
 }
