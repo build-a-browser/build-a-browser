@@ -21,9 +21,10 @@ import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.Unmanag
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutContext;
 import net.buildabrowser.babbrowser.browser.render.paint.test.TestFontMetrics;
+import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue.InnerDisplayValue;
 import net.buildabrowser.babbrowser.css.engine.property.size.LengthValue;
-import net.buildabrowser.babbrowser.css.engine.property.size.PercentageValue;
 import net.buildabrowser.babbrowser.css.engine.property.size.LengthValue.LengthType;
+import net.buildabrowser.babbrowser.css.engine.property.size.PercentageValue;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles.SizingUnit;
 
@@ -151,10 +152,48 @@ public class FlowRootContentTest {
     ElementBox parentBox = flowBlockBox(List.of(nestingBox));
 
     FlowFragment expectedFragment = new ManagedBoxFragment(0, 0, 50, 10, parentBox, List.of(
-        new LineBoxFragment(0, 0, 50, 10, List.of(
-          new ManagedBoxFragment(0, 0, 50, 10, nestingBox, List.of(
-            new TextFragment(0, 0, 25, 10, "Hello"),
-            new TextFragment(25, 0, 25, 10, "World")))))));
+      new LineBoxFragment(0, 0, 50, 10, List.of(
+        new ManagedBoxFragment(0, 0, 50, 10, nestingBox, List.of(
+          new TextFragment(0, 0, 25, 10, "Hello"),
+          new TextFragment(25, 0, 25, 10, "World")))))));
+    FlowFragment actualFragment = doLayout(parentBox);
+    assertFragmentEquals(expectedFragment, actualFragment);
+  }
+
+  @Test
+  @DisplayName("Can layout block box with text children and replaced inline-block box")
+  public void canLayoutBlockBoxWithTextChildrenAndReplacedInlineBlockBox() {
+    TestTextBox childBox1 = new TestTextBox("Hello");
+    ElementBox childBox2 = sizedReplacedInlineBlockBox(10, 20);
+    TestTextBox childBox3 = new TestTextBox("World");
+    ElementBox parentBox = flowBlockBox(List.of(childBox1, childBox2, childBox3));
+
+    // TODO: This text might actually rely on the text's vertical alignment...
+    FlowFragment expectedFragment = new ManagedBoxFragment(0, 0, 60, 20, parentBox, List.of(
+      new LineBoxFragment(0, 0, 60, 20, List.of(
+        new TextFragment(0, 0, 25, 10, "Hello"),
+        new UnmanagedBoxFragment(25, 0, 10, 20, childBox2),
+        new TextFragment(35, 0, 25, 10, "World")))));
+    FlowFragment actualFragment = doLayout(parentBox);
+    assertFragmentEquals(expectedFragment, actualFragment);
+  }
+
+  @Test
+  @DisplayName("Can layout block box with text children and non-replaced inline-block box with nested replaced block-box children")
+  public void canLayoutBlockBoxWithTextChildrenAndNonReplacedInlineBlockBoxWithNestedReplacedBlockBoxChildren() {
+    ElementBox nestedChildBox1 = sizedReplacedBlockBox(20, 20);
+    ElementBox nestedChildBox2 = sizedReplacedBlockBox(15, 30);
+    TestTextBox childBox1 = new TestTextBox("Hello");
+    ElementBox childBox2 = flowInlineBlockBox(List.of(nestedChildBox1, nestedChildBox2));
+    TestTextBox childBox3 = new TestTextBox("World");
+    ElementBox parentBox = flowBlockBox(List.of(childBox1, childBox2, childBox3));
+
+    // TODO: Find a way to test the inner box's layout
+    FlowFragment expectedFragment = new ManagedBoxFragment(0, 0, 70, 50, parentBox, List.of(
+      new LineBoxFragment(0, 0, 70, 50, List.of(
+        new TextFragment(0, 0, 25, 10, "Hello"),
+        new UnmanagedBoxFragment(25, 0, 20, 50, childBox2),
+        new TextFragment(45, 0, 25, 10, "World")))));
     FlowFragment actualFragment = doLayout(parentBox);
     assertFragmentEquals(expectedFragment, actualFragment);
   }
@@ -221,6 +260,14 @@ public class FlowRootContentTest {
       box -> new TestFixedSizeReplacedContent(box, x, y), BoxLevel.BLOCK_LEVEL, childrenStyles, List.of());
   }
 
+  private ElementBox sizedReplacedInlineBlockBox(int x, int y) {
+    ActiveStyles styles = ActiveStyles.create();
+    styles.setInnerDisplayValue(InnerDisplayValue.FLOW_ROOT);
+    return new TestElementBox(
+      box -> new TestFixedSizeReplacedContent(box, x, y), BoxLevel.INLINE_LEVEL, styles, List.of());
+  }
+
+
   private ElementBox flowBlockBox(List<Box> children) {
     return flowBlockBox(ActiveStyles.create(), children);
   }
@@ -235,6 +282,16 @@ public class FlowRootContentTest {
 
   private ElementBox flowInlineBox(List<Box> children) {
     ActiveStyles styles = ActiveStyles.create();
+    ElementBox parentBox = new TestElementBox(
+      box -> new FlowRootContent(box),
+      BoxLevel.INLINE_LEVEL, styles, children);
+
+    return parentBox;
+  }
+
+  private ElementBox flowInlineBlockBox(List<Box> children) {
+    ActiveStyles styles = ActiveStyles.create();
+    styles.setInnerDisplayValue(InnerDisplayValue.FLOW_ROOT);
     ElementBox parentBox = new TestElementBox(
       box -> new FlowRootContent(box),
       BoxLevel.INLINE_LEVEL, styles, children);
