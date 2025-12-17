@@ -31,7 +31,10 @@ public class TestFixedSizeReplacedContent implements BoxContent {
   public void layout(LayoutContext layoutContext, LayoutConstraint widthConstraint) {
     ElementBoxDimensions dimensions = box.dimensions();
     if (widthConstraint.type().equals(LayoutConstraintType.BOUNDED)) {
-      dimensions.setComputedSize(widthConstraint.value(), height);
+      int usedHeight = box.dimensions().intrinsicRatio() != -1 ?
+        (int) (widthConstraint.value() * box.dimensions().intrinsicRatio()) :
+        height;
+      dimensions.setComputedSize(widthConstraint.value(), usedHeight);
     } else {
       dimensions.setComputedSize(width, height);
     }
