@@ -117,11 +117,30 @@ public class HTMLParserTest {
     Assertions.assertEquals(1, document.styleSheets().length());
   }
 
+  // TODO: Eventually, add a proper doctype node
   @Test
   @DisplayName("Can parse document with simple doctype")
   public void canParseDocumentWithSimpleDoctype() throws IOException {
     // TODO: DocumentType node
     Document document = htmlParser.parse(new StringReader("<!doctype html>"));
+    assertTreeMatches(testDocumentToBody(), document);
+  }
+
+  @Test
+  @DisplayName("Can parse document with doctype with public identifier")
+  public void canParseDocumentWithDoctypeWithPublicIdentifier() throws IOException {
+    // TODO: DocumentType node
+    Document document = htmlParser.parse(new StringReader(
+      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">"));
+    assertTreeMatches(testDocumentToBody(), document);
+  }
+
+  @Test
+  @DisplayName("Can parse document with doctype with public then system identifier")
+  public void canParseDocumentWithDoctypeWithPublicThenSystemIdentifier() throws IOException {
+    // TODO: DocumentType node
+    Document document = htmlParser.parse(new StringReader(
+      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">"));
     assertTreeMatches(testDocumentToBody(), document);
   }
   

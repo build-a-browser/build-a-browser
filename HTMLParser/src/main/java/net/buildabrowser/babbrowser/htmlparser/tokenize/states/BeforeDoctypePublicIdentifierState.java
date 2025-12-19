@@ -1,29 +1,37 @@
 package net.buildabrowser.babbrowser.htmlparser.tokenize.states;
 
 import java.io.IOException;
-import java.util.List;
 
 import net.buildabrowser.babbrowser.htmlparser.shared.ParseContext;
-import net.buildabrowser.babbrowser.htmlparser.token.DoctypeToken;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.TokenizeContext;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.TokenizeState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.imp.TokenizeStates;
 
-public class AfterDoctypeNameState implements TokenizeState {
+public class BeforeDoctypePublicIdentifierState implements TokenizeState {
 
   @Override
   public void consume(int ch, TokenizeContext tokenizeContext, ParseContext parseContext) throws IOException {
     switch (ch) {
       case '\t', '\n', '\f', ' ':
         break;
+      case '"':
+        tokenizeContext.currentDoctypeToken().setPublicIdentifier("");
+        tokenizeContext.setTokenizeState(TokenizeStates.doctypePublicIdentifierDoubleQuotedState);
+        break;
+      case '\'':
+        tokenizeContext.currentDoctypeToken().setPublicIdentifier("");
+        tokenizeContext.setTokenizeState(TokenizeStates.doctypePublicIdentifierSingleQuotedState);
+        break;
       case '>':
+        parseContext.parseError();
+        tokenizeContext.currentDoctypeToken().setForceQuirks(true);
         tokenizeContext.setTokenizeState(TokenizeStates.dataState);
         parseContext.emitDoctypeToken(tokenizeContext.currentDoctypeToken());
+        break;
       case TokenizeContext.EOF:
-        // TODO: Parse error
-        DoctypeToken doctypeToken = tokenizeContext.currentDoctypeToken();
-        doctypeToken.setForceQuirks(true);
-        parseContext.emitDoctypeToken(doctypeToken);
+        parseContext.parseError();
+        tokenizeContext.currentDoctypeToken().setForceQuirks(true);
+        parseContext.emitDoctypeToken(tokenizeContext.currentDoctypeToken());
         parseContext.emitEOFToken();
         break;
       default:
@@ -33,23 +41,5 @@ public class AfterDoctypeNameState implements TokenizeState {
         break;
     }
   }
-
-  @Override
-  public boolean lookaheadMatched(String value, TokenizeContext tokenizeContext, ParseContext parseContext) {
-    if (value.toUpperCase().equals("PUBLIC")) {
-      tokenizeContext.setTokenizeState(TokenizeStates.afterDoctypePublicKeywordState);
-      return true;
-    } else if (value.toUpperCase().equals("SYSTEM")) {
-      tokenizeContext.setTokenizeState(TokenizeStates.afterDoctypeSystemKeywordState);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  @Override
-  public List<String> lookaheadOptions() {
-    return List.of("PUBLIC", "SYSTEM");
-  }
-
+  
 }
