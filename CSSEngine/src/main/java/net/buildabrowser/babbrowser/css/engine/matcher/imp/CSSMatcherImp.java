@@ -11,8 +11,14 @@ import net.buildabrowser.babbrowser.cssbase.cssom.CSSRuleList;
 import net.buildabrowser.babbrowser.cssbase.cssom.CSSStyleSheet;
 import net.buildabrowser.babbrowser.cssbase.cssom.StyleRule;
 import net.buildabrowser.babbrowser.cssbase.cssom.StyleSheetList;
+import net.buildabrowser.babbrowser.cssbase.cssom.extra.WeightedStyleRule;
+import net.buildabrowser.babbrowser.cssbase.cssom.extra.WeightedStyleRule.RuleSource;
+import net.buildabrowser.babbrowser.cssbase.selector.AttributeSelector;
 import net.buildabrowser.babbrowser.cssbase.selector.ComplexSelector;
+import net.buildabrowser.babbrowser.cssbase.selector.IdSelector;
 import net.buildabrowser.babbrowser.cssbase.selector.SelectorPart;
+import net.buildabrowser.babbrowser.cssbase.selector.SelectorSpecificity;
+import net.buildabrowser.babbrowser.cssbase.selector.TypeSelector;
 import net.buildabrowser.babbrowser.dom.Document;
 import net.buildabrowser.babbrowser.dom.Element;
 import net.buildabrowser.babbrowser.dom.Node;
@@ -35,7 +41,7 @@ public class CSSMatcherImp implements CSSMatcher {
       CSSStyleSheet styleSheet = stylesheets.item(i);
       CSSRuleList ruleList = styleSheet.cssRules();
       for (int j = 0; j < ruleList.length(); j++) {
-        applyRule(ruleList.item(j));
+        applyRule(ruleList.item(j), RuleSource.AUTHOR, i, j);
       }
     }
   }
@@ -80,10 +86,14 @@ public class CSSMatcherImp implements CSSMatcher {
     }
   }
 
-  private void applyRule(CSSRule cssRule) {
+  private void applyRule(
+    CSSRule cssRule,
+    RuleSource ruleSource,
+    int sheetOrdering,
+    int ruleOrdering
+  ) {
     if (!(cssRule instanceof StyleRule styleRule)) return;
     
-    List<ElementSet> toUnion = new ArrayList<>();
     for (ComplexSelector complexSelector: styleRule.complexSelectors()) {
       List<ElementSet> toIntersect = new ArrayList<>();
       for (SelectorPart selectorPart: complexSelector.parts()) {
@@ -91,14 +101,31 @@ public class CSSMatcherImp implements CSSMatcher {
       }
 
       if (toIntersect.size() == 0) continue;
-      toUnion.add(ElementSet.intersectMany(toIntersect));
+      ElementSet matchedElements = ElementSet.intersectMany(toIntersect);
+      SelectorSpecificity specificity = computeSpecificity(complexSelector);
+      WeightedStyleRule weightedRule = new WeightedStyleRule(
+        styleRule, specificity, ruleSource, sheetOrdering, ruleOrdering);
+
+      for (Element element: matchedElements) {
+        context.onMatched(element, weightedRule);
+      }
+    }
+  }
+
+  private SelectorSpecificity computeSpecificity(ComplexSelector selector) {
+    int numIdSelectors = 0;
+    int numClassSelectors = 0;
+    int numTypeSelectors = 0;
+    for (SelectorPart selectorPart: selector.parts()) {
+      switch (selectorPart) {
+        case IdSelector _ -> numIdSelectors++;
+        case AttributeSelector _ -> numClassSelectors++;
+        case TypeSelector _ -> numTypeSelectors++;
+        default -> {}
+      }
     }
 
-    if (toUnion.size() == 0) return;
-    ElementSet allElements = ElementSet.unionMany(toUnion);
-    for (Element element: allElements) {
-      context.onMatched(element, styleRule);
-    }
+    return new SelectorSpecificity(numIdSelectors, numClassSelectors, numTypeSelectors);
   }
 
 }

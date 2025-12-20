@@ -1,7 +1,7 @@
 package net.buildabrowser.babbrowser.css.engine.matcher;
 
 import net.buildabrowser.babbrowser.css.engine.matcher.imp.CSSMatcherImp;
-import net.buildabrowser.babbrowser.cssbase.cssom.StyleRule;
+import net.buildabrowser.babbrowser.cssbase.cssom.extra.WeightedStyleRule;
 import net.buildabrowser.babbrowser.dom.Document;
 import net.buildabrowser.babbrowser.dom.Node;
 import net.buildabrowser.babbrowser.dom.mutable.DocumentChangeListener;
@@ -14,9 +14,9 @@ public interface CSSMatcher {
 
   interface CSSMatcherContext {
     
-    void onMatched(Node node, StyleRule matchedRule);
+    void onMatched(Node node, WeightedStyleRule matchedRule);
 
-    void onUnmatched(Node node, StyleRule matchedRule);
+    void onUnmatched(Node node, WeightedStyleRule matchedRule);
 
   }
 

@@ -16,6 +16,7 @@ import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles.SizingUnit;
 import net.buildabrowser.babbrowser.cssbase.cssom.Declaration;
 import net.buildabrowser.babbrowser.cssbase.cssom.StyleRule;
+import net.buildabrowser.babbrowser.cssbase.cssom.extra.WeightedStyleRule;
 import net.buildabrowser.babbrowser.cssbase.parser.CSSParser.CSSTokenStream;
 import net.buildabrowser.babbrowser.cssbase.parser.CSSParser.SeekableCSSTokenStream;
 
@@ -56,10 +57,10 @@ public final class ActiveStylesGenerator {
   
   private ActiveStylesGenerator() {}
 
-  public static ActiveStyles generateActiveStyles(Set<StyleRule> styleRules) {
+  public static ActiveStyles generateActiveStyles(Set<WeightedStyleRule> styleRules) {
     ActiveStyles activeStyles = ActiveStyles.create();
-    for (StyleRule styleRule: styleRules) {
-      addToActiveStyles(activeStyles, styleRule);
+    for (WeightedStyleRule styleRule: styleRules) {
+      addToActiveStyles(activeStyles, styleRule.rule());
     }
 
     return activeStyles;
