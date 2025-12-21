@@ -18,7 +18,7 @@ public class RenderDocumentChangeListener implements DocumentChangeListener {
   @Override
   public void onNodeAdded(Node node) {
     if (node instanceof MutableElement element) {
-      element.setContext(ElementContext.create());
+      element.setContext(ElementContext.create(element));
     }
     styleDocumentChangeListener.onNodeAdded(node);
   }

@@ -3,11 +3,11 @@ package net.buildabrowser.babbrowser.css.engine.property.display;
 import java.io.IOException;
 import java.util.Map;
 
+import net.buildabrowser.babbrowser.css.engine.property.CSSProperty;
 import net.buildabrowser.babbrowser.css.engine.property.CSSValue;
 import net.buildabrowser.babbrowser.css.engine.property.PropertyValueParser;
 import net.buildabrowser.babbrowser.css.engine.property.PropertyValueParserUtil;
 import net.buildabrowser.babbrowser.css.engine.property.PropertyValueParserUtil.AnyOrderResult;
-import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue.DisplayUnionValue;
 import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue.InnerDisplayValue;
 import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue.OuterDisplayValue;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
@@ -31,15 +31,15 @@ public class DisplayParser implements PropertyValueParser {
   );
 
   private static final Map<String, CSSValue> BOX_VALUES = Map.of(
-    "contents", new DisplayUnionValue(OuterDisplayValue.CONTENTS, InnerDisplayValue.FLOW),
-    "none", new DisplayUnionValue(OuterDisplayValue.NONE, InnerDisplayValue.FLOW)
+    "contents", DisplayValue.create(OuterDisplayValue.CONTENTS, InnerDisplayValue.FLOW),
+    "none", DisplayValue.create(OuterDisplayValue.NONE, InnerDisplayValue.FLOW)
   );
 
   private static final Map<String, CSSValue> LEGACY_VALUES = Map.of(
-    "inline-block", new DisplayUnionValue(OuterDisplayValue.INLINE, InnerDisplayValue.FLOW_ROOT),
-    "inline-table", new DisplayUnionValue(OuterDisplayValue.INLINE, InnerDisplayValue.TABLE),
-    "inline-flex", new DisplayUnionValue(OuterDisplayValue.INLINE, InnerDisplayValue.FLEX),
-    "inline-grid", new DisplayUnionValue(OuterDisplayValue.INLINE, InnerDisplayValue.GRID)
+    "inline-block", DisplayValue.create(OuterDisplayValue.INLINE, InnerDisplayValue.FLOW_ROOT),
+    "inline-table", DisplayValue.create(OuterDisplayValue.INLINE, InnerDisplayValue.TABLE),
+    "inline-flex", DisplayValue.create(OuterDisplayValue.INLINE, InnerDisplayValue.FLEX),
+    "inline-grid", DisplayValue.create(OuterDisplayValue.INLINE, InnerDisplayValue.GRID)
   );
 
   // TOOO: Listitem and internal types
@@ -50,9 +50,8 @@ public class DisplayParser implements PropertyValueParser {
       (stream1, _) -> PropertyValueParserUtil.parseIdentMap(stream, BOX_VALUES),
       (stream1, _) -> PropertyValueParserUtil.parseIdentMap(stream, LEGACY_VALUES));
     
-    if (result instanceof DisplayUnionValue unionValue) {
-      activeStyles.setOuterDisplayValue(unionValue.outerDisplayValue());
-      activeStyles.setInnerDisplayValue(unionValue.innerDisplayValue());
+    if (result instanceof DisplayValue unionValue) {
+      activeStyles.setProperty(CSSProperty.DISPLAY, unionValue);
     }
 
     return result;
@@ -71,7 +70,12 @@ public class DisplayParser implements PropertyValueParser {
     if (outerDisplayValue == null) outerDisplayValue =
       innerDisplayValue == InnerDisplayValue.RUBY ? OuterDisplayValue.INLINE : OuterDisplayValue.BLOCK;
 
-    return new DisplayUnionValue(outerDisplayValue, innerDisplayValue);
+    return DisplayValue.create(outerDisplayValue, innerDisplayValue);
+  }
+
+  @Override
+  public CSSProperty relatedProperty() {
+    return CSSProperty.DISPLAY;
   }
   
 }

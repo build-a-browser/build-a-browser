@@ -4,8 +4,8 @@ import net.buildabrowser.babbrowser.browser.render.box.ElementBoxDimensions;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint.LayoutConstraintType;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutContext;
+import net.buildabrowser.babbrowser.css.engine.property.CSSProperty;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
-import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles.SizingUnit;
 
 public final class FlowHeightUtil {
   
@@ -24,10 +24,10 @@ public final class FlowHeightUtil {
 
     LayoutConstraint determinedWidthConstraint = FlowWidthUtil.evaluateBaseSize(
       layoutContext, parentConstraint,
-      childStyles.getSizingProperty(SizingUnit.WIDTH), childStyles);
+      childStyles.getProperty(CSSProperty.WIDTH), childStyles);
     LayoutConstraint determinedHeightConstraint = FlowWidthUtil.evaluateBaseSize(
       layoutContext, parentConstraint,
-      childStyles.getSizingProperty(SizingUnit.HEIGHT), childStyles);
+      childStyles.getProperty(CSSProperty.HEIGHT), childStyles);
     
     boolean isHeightAuto = determinedHeightConstraint.type().equals(LayoutConstraintType.AUTO);
     if (
@@ -56,7 +56,7 @@ public final class FlowHeightUtil {
     // TODO: An actual proper implementation
     LayoutConstraint determinedConstraint = FlowWidthUtil.evaluateBaseSize(
       layoutContext, parentConstraint,
-      childStyles.getSizingProperty(SizingUnit.HEIGHT), childStyles);
+      childStyles.getProperty(CSSProperty.HEIGHT), childStyles);
 
     return determinedConstraint;
   }

@@ -2,6 +2,7 @@ package net.buildabrowser.babbrowser.css.engine.property.background;
 
 import java.io.IOException;
 
+import net.buildabrowser.babbrowser.css.engine.property.CSSProperty;
 import net.buildabrowser.babbrowser.css.engine.property.CSSValue;
 import net.buildabrowser.babbrowser.css.engine.property.PropertyValueParser;
 import net.buildabrowser.babbrowser.css.engine.property.color.ColorBaseParser;
@@ -18,10 +19,15 @@ public class BackgroundColorParser implements PropertyValueParser {
     CSSValue value = colorBaseParser.parse(stream, null);
 
     if (value instanceof ColorValue colorValue) {
-      activeStyles.setBackgroundColor(colorValue.asSARGB());
+      activeStyles.setProperty(CSSProperty.BACKGROUND_COLOR, colorValue);
     }
     
     return value;
+  }
+
+  @Override
+  public CSSProperty relatedProperty() {
+    return CSSProperty.BACKGROUND_COLOR;
   }
   
 }

@@ -4,11 +4,11 @@ import net.buildabrowser.babbrowser.browser.render.box.ElementBoxDimensions;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint.LayoutConstraintType;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutContext;
+import net.buildabrowser.babbrowser.css.engine.property.CSSProperty;
 import net.buildabrowser.babbrowser.css.engine.property.CSSValue;
 import net.buildabrowser.babbrowser.css.engine.property.size.LengthValue;
 import net.buildabrowser.babbrowser.css.engine.property.size.PercentageValue;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
-import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles.SizingUnit;
 
 public final class FlowWidthUtil {
   
@@ -62,7 +62,7 @@ public final class FlowWidthUtil {
     ElementBoxDimensions boxDimensions
   ) {
     LayoutConstraint baseWidth = FlowWidthUtil.evaluateBaseSize(
-      layoutContext, parentConstraint, childStyles.getSizingProperty(SizingUnit.WIDTH), childStyles);
+      layoutContext, parentConstraint, childStyles.getProperty(CSSProperty.WIDTH), childStyles);
     
     if (!baseWidth.type().equals(LayoutConstraintType.AUTO)) {
       return baseWidth;

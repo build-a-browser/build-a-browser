@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import net.buildabrowser.babbrowser.css.engine.property.CSSValue;
-import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue.DisplayUnionValue;
 import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue.InnerDisplayValue;
 import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue.OuterDisplayValue;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
@@ -25,7 +24,7 @@ public class DisplayParserTest {
       CSSTokenStream.create(IdentToken.create("inline-block")),
       ActiveStyles.create());
     Assertions.assertEquals(
-      new DisplayUnionValue(OuterDisplayValue.INLINE, InnerDisplayValue.FLOW_ROOT),
+      DisplayValue.create(OuterDisplayValue.INLINE, InnerDisplayValue.FLOW_ROOT),
       value);
   }
 
@@ -36,7 +35,7 @@ public class DisplayParserTest {
       CSSTokenStream.create(IdentToken.create("block"), IdentToken.create("flex")),
       ActiveStyles.create());
     Assertions.assertEquals(
-      new DisplayUnionValue(OuterDisplayValue.BLOCK, InnerDisplayValue.FLEX),
+      DisplayValue.create(OuterDisplayValue.BLOCK, InnerDisplayValue.FLEX),
       value);
   }
 
@@ -47,7 +46,7 @@ public class DisplayParserTest {
       CSSTokenStream.create(IdentToken.create("ruby")),
       ActiveStyles.create());
     Assertions.assertEquals(
-      new DisplayUnionValue(OuterDisplayValue.INLINE, InnerDisplayValue.RUBY),
+      DisplayValue.create(OuterDisplayValue.INLINE, InnerDisplayValue.RUBY),
       value);
   }
 

@@ -18,8 +18,8 @@ import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint.Layou
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutContext;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutUtil;
 import net.buildabrowser.babbrowser.browser.render.paint.FontMetrics;
+import net.buildabrowser.babbrowser.css.engine.property.CSSProperty;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
-import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles.SizingUnit;
 
 public class FlowInlineLayout {
 
@@ -159,7 +159,7 @@ public class FlowInlineLayout {
     ElementBoxDimensions boxDimensions
   ) {
     LayoutConstraint baseWidth = FlowWidthUtil.evaluateBaseSize(
-      layoutContext, parentConstraint, childStyles.getSizingProperty(SizingUnit.WIDTH), childStyles);
+      layoutContext, parentConstraint, childStyles.getProperty(CSSProperty.WIDTH), childStyles);
     
     if (!baseWidth.type().equals(LayoutConstraintType.AUTO)) {
       return baseWidth;

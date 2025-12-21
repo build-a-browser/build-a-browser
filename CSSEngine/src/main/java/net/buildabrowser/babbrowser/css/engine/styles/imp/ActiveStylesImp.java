@@ -1,106 +1,99 @@
 package net.buildabrowser.babbrowser.css.engine.styles.imp;
 
+import java.util.BitSet;
+
+import net.buildabrowser.babbrowser.css.engine.property.CSSProperty;
 import net.buildabrowser.babbrowser.css.engine.property.CSSValue;
+import net.buildabrowser.babbrowser.css.engine.property.color.ColorValue;
+import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue;
 import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue.InnerDisplayValue;
 import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue.OuterDisplayValue;
-import net.buildabrowser.babbrowser.css.engine.property.floats.ClearValue;
-import net.buildabrowser.babbrowser.css.engine.property.floats.FloatValue;
-import net.buildabrowser.babbrowser.css.engine.property.size.LengthValue;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
 
 public class ActiveStylesImp implements ActiveStyles {
 
-  private static final CSSValue zeroValue = LengthValue.create(0, true, null);
+  private final CSSValue[] propertyValues;
+  private final BitSet inheritValues;
 
-  private final CSSValue[] cssValues = new CSSValue[] {
-    zeroValue, zeroValue, zeroValue, zeroValue,
-    zeroValue, zeroValue, zeroValue, zeroValue,
-    CSSValue.AUTO, CSSValue.AUTO, CSSValue.AUTO, CSSValue.AUTO,
-    CSSValue.AUTO, zeroValue, CSSValue.NONE,
-    CSSValue.AUTO, zeroValue, CSSValue.NONE
-  };
+  private final ActiveStyles parentStyles;
 
-  private int textColor = 0xFF000000;
-  private int backgroundColor = 0xFFFFFFFF;
-  private OuterDisplayValue outerDisplayValue = OuterDisplayValue.BLOCK;
-  private InnerDisplayValue innerDisplayValue = InnerDisplayValue.FLOW;
-  private CSSValue floatSide = CSSValue.NONE;
-  private CSSValue clearSide = CSSValue.NONE;
-
-  @Override
-  public int textColor() {
-    return this.textColor;
+  public ActiveStylesImp(ActiveStyles parentStyles) {
+    this.parentStyles = parentStyles;
+    this.propertyValues = new CSSValue[CSSProperty.idCount()];
+    this.inheritValues = new BitSet(CSSProperty.idCount());
   }
 
   @Override
-  public void setTextColor(int textColor) {
-    this.textColor = textColor;
+  public void setProperty(CSSProperty property, CSSValue value) {
+    if (property.hasExpansion()) {
+      throw new UnsupportedOperationException("Cannot set expanded property!");
+    }
+
+    propertyValues[property.id()] = value;
+    inheritValues.set(property.id(), false);
+  }
+
+  @Override
+  public void inheritProperty(CSSProperty property) {
+    if (property.hasExpansion()) {
+      for (CSSProperty expansion: property.getExpansions()) {
+        inheritProperty(expansion);
+      }
+    } else {
+      propertyValues[property.id()] = null;
+      inheritValues.set(property.id(), true);
+    }
+  }
+
+  @Override
+  public void useInitialProperty(CSSProperty property) {
+    if (property.hasExpansion()) {
+      for (CSSProperty expansion: property.getExpansions()) {
+        useInitialProperty(expansion);
+      }
+    } else {
+      setProperty(property, property.initial());
+    }
+  }
+
+  @Override
+  public void unsetProperty(CSSProperty property) {
+    propertyValues[property.id()] = null;
+    inheritValues.set(property.id(), false);
+  }
+
+  @Override
+  public CSSValue getProperty(CSSProperty property) {
+    if (property.hasExpansion()) {
+      throw new UnsupportedOperationException("Cannot get expanded property!");
+    }
+
+    int id = property.id();
+    return
+      parentStyles != null && inheritValues.get(id) ? parentStyles.getProperty(property) :
+      propertyValues[id] != null ? propertyValues[id] :
+      parentStyles != null && property.inherited() ? parentStyles.getProperty(property) :
+      property.initial();
+  }
+
+  @Override
+  public int textColor() {
+    return ((ColorValue) getProperty(CSSProperty.COLOR)).asSARGB();
   }
 
   @Override
   public int backgroundColor() {
-    return this.backgroundColor;
-  }
-
-  @Override
-  public void setBackgroundColor(int backgroundColor) {
-    this.backgroundColor = backgroundColor;
+    return ((ColorValue) getProperty(CSSProperty.BACKGROUND_COLOR)).asSARGB();
   }
 
   @Override
   public OuterDisplayValue outerDisplayValue() {
-    return this.outerDisplayValue;
+    return ((DisplayValue) getProperty(CSSProperty.DISPLAY)).outerDisplayValue();
   }
 
   @Override
   public InnerDisplayValue innerDisplayValue() {
-    return this.innerDisplayValue;
-  }
-
-  @Override
-  public void setOuterDisplayValue(OuterDisplayValue outerDisplayValue) {
-    this.outerDisplayValue = outerDisplayValue;
-  }
-
-  @Override
-  public void setInnerDisplayValue(InnerDisplayValue innerDisplayValue) {
-    this.innerDisplayValue = innerDisplayValue;
-  }
-
-  @Override
-  public CSSValue floatSide() {
-    return this.floatSide;
-  }
-
-  @Override
-  public CSSValue clearSide() {
-    return this.clearSide;
-  }
-
-  @Override
-  public void setFloat(CSSValue result) {
-    // TODO: Handle inherit
-    if (result instanceof FloatValue floatValue) {
-      this.floatSide = floatValue;
-    }
-  }
-
-  @Override
-  public void setClear(CSSValue result) {
-    // TODO: Handle inherit
-    if (result instanceof ClearValue clearValue) {
-      this.clearSide = clearValue;
-    }
-  }
-
-  @Override
-  public void setSizingProperty(SizingUnit unit, CSSValue value) {
-    cssValues[unit.ordinal()] = value;
-  }
-
-  @Override
-  public CSSValue getSizingProperty(SizingUnit unit) {
-    return cssValues[unit.ordinal()];
+    return ((DisplayValue) getProperty(CSSProperty.DISPLAY)).innerDisplayValue();
   }
   
 }

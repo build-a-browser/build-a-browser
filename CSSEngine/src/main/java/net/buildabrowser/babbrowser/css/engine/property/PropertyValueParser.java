@@ -9,4 +9,8 @@ public interface PropertyValueParser {
  
   CSSValue parse(SeekableCSSTokenStream stream, ActiveStyles activeStyles) throws IOException;
 
+  default CSSProperty relatedProperty() {
+    return null;
+  }
+
 }

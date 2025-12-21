@@ -21,12 +21,14 @@ import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.Unmanag
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutContext;
 import net.buildabrowser.babbrowser.browser.render.paint.test.TestFontMetrics;
+import net.buildabrowser.babbrowser.css.engine.property.CSSProperty;
+import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue;
 import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue.InnerDisplayValue;
+import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue.OuterDisplayValue;
 import net.buildabrowser.babbrowser.css.engine.property.size.LengthValue;
 import net.buildabrowser.babbrowser.css.engine.property.size.LengthValue.LengthType;
 import net.buildabrowser.babbrowser.css.engine.property.size.PercentageValue;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
-import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles.SizingUnit;
 
 public class FlowRootContentTest {
   
@@ -230,7 +232,7 @@ public class FlowRootContentTest {
   @DisplayName("Can layout block box with absolute-width non-replaced block child")
   public void canLayoutBlockBoxWithAbsoluteWidthNonReplacedBlockChild() {
     ActiveStyles childStyles = ActiveStyles.create();
-    childStyles.setSizingProperty(SizingUnit.WIDTH, LengthValue.create(4, true, LengthType.PX));
+    childStyles.setProperty(CSSProperty.WIDTH, LengthValue.create(4, true, LengthType.PX));
     ElementBox childBox = flowBlockBox(childStyles, List.of());
     ElementBox parentBox = flowBlockBox(List.of(childBox));
 
@@ -244,7 +246,7 @@ public class FlowRootContentTest {
   @DisplayName("Can layout block box with percent-width non-replaced block child")
   public void canLayoutBlockBoxWithPercentWidthNonReplacedBlockChild() {
     ActiveStyles childStyles = ActiveStyles.create();
-    childStyles.setSizingProperty(SizingUnit.WIDTH, PercentageValue.create(25));
+    childStyles.setProperty(CSSProperty.WIDTH, PercentageValue.create(25));
     ElementBox childBox = flowBlockBox(childStyles, List.of());
     ElementBox parentBox = flowBlockBox(List.of(childBox));
 
@@ -258,7 +260,7 @@ public class FlowRootContentTest {
   @DisplayName("Can layout block box with text and width-sized non-replaced inline-block child")
   public void canLayoutBlockBoxWithTextAndWidthSizedNonReplacedInlineBlockChild() {
     ActiveStyles childStyles = ActiveStyles.create();
-    childStyles.setSizingProperty(SizingUnit.WIDTH, PercentageValue.create(25));
+    childStyles.setProperty(CSSProperty.WIDTH, PercentageValue.create(25));
     TestTextBox childBox1 = new TestTextBox("Hello");
     ElementBox childBox2 = flowInlineBlockBox(childStyles, List.of());
     ElementBox parentBox = flowBlockBox(List.of(childBox1, childBox2));
@@ -275,7 +277,7 @@ public class FlowRootContentTest {
   @DisplayName("Can layout block box with text and ratio replaced inline-block child")
   public void canLayoutBlockBoxWithTextAndRatioReplacedInlineBlockChild() {
     ActiveStyles childStyles = ActiveStyles.create();
-    childStyles.setSizingProperty(SizingUnit.WIDTH, LengthValue.create(20, true, LengthType.PX));
+    childStyles.setProperty(CSSProperty.WIDTH, LengthValue.create(20, true, LengthType.PX));
     TestTextBox childBox1 = new TestTextBox("Hello");
     ElementBox childBox2 = sizedReplacedInlineBlockBox(childStyles, 40, 80);
     childBox2.dimensions().setIntrinsicRatio(.5f);
@@ -293,7 +295,7 @@ public class FlowRootContentTest {
   @DisplayName("Can layout block box with percent-height non-replaced block child")
   public void canLayoutBlockBoxWithPercentHeightNonReplacedBlockChild() {
     ActiveStyles childStyles = ActiveStyles.create();
-    childStyles.setSizingProperty(SizingUnit.HEIGHT, PercentageValue.create(25));
+    childStyles.setProperty(CSSProperty.HEIGHT, PercentageValue.create(25));
     ElementBox childBox = flowBlockBox(childStyles, List.of());
     ElementBox parentBox = flowBlockBox(List.of(childBox));
 
@@ -307,8 +309,8 @@ public class FlowRootContentTest {
   @DisplayName("Can layout block box with text and sized non-replaced inline-block child")
   public void canLayoutBlockBoxWithTextAndSizedNonReplacedInlineBlockChild() {
     ActiveStyles childStyles = ActiveStyles.create();
-    childStyles.setSizingProperty(SizingUnit.WIDTH, LengthValue.create(5, true, LengthType.PX));
-    childStyles.setSizingProperty(SizingUnit.HEIGHT, LengthValue.create(15, true, LengthType.PX));
+    childStyles.setProperty(CSSProperty.WIDTH, LengthValue.create(5, true, LengthType.PX));
+    childStyles.setProperty(CSSProperty.HEIGHT, LengthValue.create(15, true, LengthType.PX));
     TestTextBox childBox1 = new TestTextBox("Hello");
     ElementBox childBox2 = flowInlineBlockBox(childStyles, List.of());
     ElementBox parentBox = flowBlockBox(List.of(childBox1, childBox2));
@@ -335,7 +337,7 @@ public class FlowRootContentTest {
   }
 
   private ElementBox sizedReplacedInlineBlockBox(ActiveStyles styles, int width, int height) {
-    styles.setInnerDisplayValue(InnerDisplayValue.FLOW_ROOT);
+    styles.setProperty(CSSProperty.DISPLAY, DisplayValue.create(OuterDisplayValue.BLOCK, InnerDisplayValue.FLOW_ROOT));
     TestElementBox myBox = new TestElementBox(
       box -> new TestFixedSizeReplacedContent(box, width, height), BoxLevel.INLINE_LEVEL, styles, List.of());
     myBox.dimensions().setIntrinsicWidth(width);
@@ -370,7 +372,7 @@ public class FlowRootContentTest {
   }
 
   private ElementBox flowInlineBlockBox(ActiveStyles styles, List<Box> children) {
-    styles.setInnerDisplayValue(InnerDisplayValue.FLOW_ROOT);
+    styles.setProperty(CSSProperty.DISPLAY, DisplayValue.create(OuterDisplayValue.BLOCK, InnerDisplayValue.FLOW_ROOT));
     ElementBox parentBox = new TestElementBox(
       box -> new FlowRootContent(box),
       BoxLevel.INLINE_LEVEL, styles, children);

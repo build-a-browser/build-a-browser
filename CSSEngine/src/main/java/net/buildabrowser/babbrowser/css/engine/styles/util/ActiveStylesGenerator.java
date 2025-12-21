@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import net.buildabrowser.babbrowser.css.engine.property.CSSProperty;
 import net.buildabrowser.babbrowser.css.engine.property.PropertyValueParser;
 import net.buildabrowser.babbrowser.css.engine.property.background.BackgroundColorParser;
 import net.buildabrowser.babbrowser.css.engine.property.color.ColorParser;
@@ -13,12 +14,12 @@ import net.buildabrowser.babbrowser.css.engine.property.floats.ClearParser;
 import net.buildabrowser.babbrowser.css.engine.property.floats.FloatParser;
 import net.buildabrowser.babbrowser.css.engine.property.size.SizeParser;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
-import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles.SizingUnit;
 import net.buildabrowser.babbrowser.cssbase.cssom.Declaration;
 import net.buildabrowser.babbrowser.cssbase.cssom.StyleRule;
 import net.buildabrowser.babbrowser.cssbase.cssom.extra.WeightedStyleRule;
 import net.buildabrowser.babbrowser.cssbase.parser.CSSParser.CSSTokenStream;
 import net.buildabrowser.babbrowser.cssbase.parser.CSSParser.SeekableCSSTokenStream;
+import net.buildabrowser.babbrowser.cssbase.tokens.IdentToken;
 
 public final class ActiveStylesGenerator {
 
@@ -31,34 +32,14 @@ public final class ActiveStylesGenerator {
 
     "display", new DisplayParser(),
 
-    "margin-top", SizeParser.forMargin(SizingUnit.MARGIN_TOP),
-    "margin-right", SizeParser.forMargin(SizingUnit.MARGIN_RIGHT),
-    "margin-bottom", SizeParser.forMargin(SizingUnit.MARGIN_BOTTOM),
-    "margin-left", SizeParser.forMargin(SizingUnit.MARGIN_LEFT),
-
-    "padding-top", SizeParser.forPadding(SizingUnit.PADDING_TOP),
-    "padding-right", SizeParser.forPadding(SizingUnit.PADDING_RIGHT),
-    "padding-bottom", SizeParser.forPadding(SizingUnit.PADDING_BOTTOM),
-    "padding-left", SizeParser.forPadding(SizingUnit.PADDING_LEFT),
-
-    "top", SizeParser.forPosition(SizingUnit.TOP),
-    "right", SizeParser.forPosition(SizingUnit.RIGHT),
-    "bottom", SizeParser.forPosition(SizingUnit.BOTTOM),
-    "left", SizeParser.forPosition(SizingUnit.LEFT),
-
-    "width", SizeParser.forNormal(SizingUnit.WIDTH),
-    "min-width", SizeParser.forMin(SizingUnit.MIN_WIDTH),
-    "max-width", SizeParser.forMax(SizingUnit.MAX_WIDTH),
-
-    "height", SizeParser.forNormal(SizingUnit.HEIGHT),
-    "min-height", SizeParser.forMin(SizingUnit.MIN_HEIGHT),
-    "max-height", SizeParser.forMax(SizingUnit.MAX_HEIGHT)
+    "width", SizeParser.forNormal(CSSProperty.WIDTH),
+    "height", SizeParser.forNormal(CSSProperty.HEIGHT)
   );
   
   private ActiveStylesGenerator() {}
 
-  public static ActiveStyles generateActiveStyles(Set<WeightedStyleRule> styleRules) {
-    ActiveStyles activeStyles = ActiveStyles.create();
+  public static ActiveStyles generateActiveStyles(Set<WeightedStyleRule> styleRules, ActiveStyles parentStyles) {
+    ActiveStyles activeStyles = ActiveStyles.create(parentStyles);
     for (WeightedStyleRule styleRule: styleRules) {
       addToActiveStyles(activeStyles, styleRule.rule());
     }
@@ -75,6 +56,27 @@ public final class ActiveStylesGenerator {
   private static void parseDeclaration(Declaration declaration, ActiveStyles activeStyles) {
     PropertyValueParser parser = PROPERTY_PARSERS.get(declaration.name());
     if (parser == null) return;
+    if (parser.relatedProperty() == null) {
+      throw new UnsupportedOperationException("Parser does not have a related property!");
+    }
+
+    if (
+      declaration.value().size() == 1
+      && declaration.value().get(0) instanceof IdentToken identToken
+    ) {
+      if (identToken.value().equals("initial")) {
+        activeStyles.useInitialProperty(parser.relatedProperty());
+        return;
+      } else if (identToken.value().equals("inherit")) {
+        activeStyles.inheritProperty(parser.relatedProperty());
+        return;
+      } else if (identToken.value().equals("unset")) {
+        activeStyles.unsetProperty(parser.relatedProperty());
+        return;
+      }
+
+      // TODO: Support revert keyword
+    }
 
     SeekableCSSTokenStream tokenStream = CSSTokenStream.create(declaration.value());
     try {

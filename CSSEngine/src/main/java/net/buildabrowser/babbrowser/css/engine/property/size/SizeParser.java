@@ -3,12 +3,12 @@ package net.buildabrowser.babbrowser.css.engine.property.size;
 import java.io.IOException;
 import java.util.Map;
 
+import net.buildabrowser.babbrowser.css.engine.property.CSSProperty;
 import net.buildabrowser.babbrowser.css.engine.property.CSSValue;
 import net.buildabrowser.babbrowser.css.engine.property.CSSValue.CSSFailure;
 import net.buildabrowser.babbrowser.css.engine.property.PropertyValueParser;
 import net.buildabrowser.babbrowser.css.engine.property.size.LengthValue.LengthType;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
-import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles.SizingUnit;
 import net.buildabrowser.babbrowser.cssbase.parser.CSSParser.SeekableCSSTokenStream;
 import net.buildabrowser.babbrowser.cssbase.tokens.DimensionToken;
 import net.buildabrowser.babbrowser.cssbase.tokens.IdentToken;
@@ -32,12 +32,12 @@ public class SizeParser implements PropertyValueParser {
 
   private final boolean allowNone;
   private final boolean allowAuto;
-  private final SizingUnit sizingUnit;
+  private final CSSProperty property;
 
-  public SizeParser(boolean allowNone, boolean allowAuto, SizingUnit sizingUnit) {
+  public SizeParser(boolean allowNone, boolean allowAuto, CSSProperty property) {
     this.allowNone = allowNone;
     this.allowAuto = allowAuto;
-    this.sizingUnit = sizingUnit;
+    this.property = property;
   }
 
   @Override
@@ -45,8 +45,13 @@ public class SizeParser implements PropertyValueParser {
     CSSValue result = parseInternal(stream, activeStyles);
     if (result.isFailure()) return result;
 
-    activeStyles.setSizingProperty(sizingUnit, result);
+    activeStyles.setProperty(property, result);
     return result;
+  }
+
+  @Override
+  public CSSProperty relatedProperty() {
+    return property;
   }
 
   private CSSValue parseInternal(SeekableCSSTokenStream stream, ActiveStyles activeStyles) throws IOException {
@@ -62,11 +67,6 @@ public class SizeParser implements PropertyValueParser {
       && identToken.value().equals("auto")
     ) {
       return CSSValue.AUTO;
-    } else if (
-      stream.peek() instanceof IdentToken identToken
-      && identToken.value().equals("inherit")
-    ) {
-      return CSSValue.INHERIT;
     } else if (stream.peek() instanceof PercentageToken percentageToken) {
       return PercentageValue.create(percentageToken.value());
     } else if (stream.peek() instanceof DimensionToken dimensionToken) {
@@ -85,27 +85,27 @@ public class SizeParser implements PropertyValueParser {
     }
   }
 
-  public static SizeParser forMargin(SizingUnit unit) {
+  public static SizeParser forMargin(CSSProperty unit) {
     return new SizeParser(false, true, unit);
   }
 
-  public static SizeParser forPadding(SizingUnit unit) {
+  public static SizeParser forPadding(CSSProperty unit) {
     return new SizeParser(false, false, unit);
   }
 
-  public static SizeParser forPosition(SizingUnit unit) {
+  public static SizeParser forPosition(CSSProperty unit) {
     return new SizeParser(false, true, unit);
   }
 
-  public static SizeParser forNormal(SizingUnit unit) {
+  public static SizeParser forNormal(CSSProperty unit) {
     return new SizeParser(false, true, unit);
   }
 
-  public static SizeParser forMin(SizingUnit unit) {
+  public static SizeParser forMin(CSSProperty unit) {
     return new SizeParser(false, false, unit);
   }
 
-  public static SizeParser forMax(SizingUnit unit) {
+  public static SizeParser forMax(CSSProperty unit) {
     return new SizeParser(true, false, unit);
   }
   

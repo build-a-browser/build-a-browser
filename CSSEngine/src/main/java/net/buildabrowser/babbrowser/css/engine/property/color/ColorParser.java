@@ -2,6 +2,7 @@ package net.buildabrowser.babbrowser.css.engine.property.color;
 
 import java.io.IOException;
 
+import net.buildabrowser.babbrowser.css.engine.property.CSSProperty;
 import net.buildabrowser.babbrowser.css.engine.property.CSSValue;
 import net.buildabrowser.babbrowser.css.engine.property.PropertyValueParser;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
@@ -16,10 +17,15 @@ public class ColorParser implements PropertyValueParser {
     CSSValue value = colorBaseParser.parse(stream, null);
 
     if (value instanceof ColorValue colorValue) {
-      activeStyles.setTextColor(colorValue.asSARGB());
+      activeStyles.setProperty(CSSProperty.COLOR, colorValue);
     }
     
     return value;
+  }
+
+  @Override
+  public CSSProperty relatedProperty() {
+    return CSSProperty.COLOR;
   }
   
 }

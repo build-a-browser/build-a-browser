@@ -3,6 +3,7 @@ package net.buildabrowser.babbrowser.browser.render.context;
 import net.buildabrowser.babbrowser.browser.render.context.imp.ElementContextImp;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
 import net.buildabrowser.babbrowser.cssbase.cssom.extra.WeightedStyleRule;
+import net.buildabrowser.babbrowser.dom.mutable.MutableElement;
 
 public interface ElementContext {
   
@@ -12,8 +13,8 @@ public interface ElementContext {
 
   ActiveStyles activeStyles();
 
-  static ElementContext create() {
-    return new ElementContextImp();
+  static ElementContext create(MutableElement element) {
+    return new ElementContextImp(element);
   }
 
 }

@@ -9,8 +9,8 @@ import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.Unmanag
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint.LayoutConstraintType;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutContext;
+import net.buildabrowser.babbrowser.css.engine.property.CSSProperty;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
-import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles.SizingUnit;
 
 public class FlowBlockLayout {
 
@@ -150,7 +150,7 @@ public class FlowBlockLayout {
   ) {
     LayoutConstraint determinedConstraint = FlowWidthUtil.evaluateBaseSize(
       layoutContext, parentConstraint,
-      childStyles.getSizingProperty(SizingUnit.WIDTH), childStyles);
+      childStyles.getProperty(CSSProperty.WIDTH), childStyles);
     if (!determinedConstraint.type().equals(LayoutConstraintType.AUTO)) {
       return determinedConstraint;
     }

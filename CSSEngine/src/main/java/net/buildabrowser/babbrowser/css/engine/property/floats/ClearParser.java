@@ -3,6 +3,7 @@ package net.buildabrowser.babbrowser.css.engine.property.floats;
 import java.io.IOException;
 import java.util.Map;
 
+import net.buildabrowser.babbrowser.css.engine.property.CSSProperty;
 import net.buildabrowser.babbrowser.css.engine.property.CSSValue;
 import net.buildabrowser.babbrowser.css.engine.property.PropertyValueParser;
 import net.buildabrowser.babbrowser.css.engine.property.PropertyValueParserUtil;
@@ -22,8 +23,13 @@ public class ClearParser implements PropertyValueParser {
     CSSValue result = PropertyValueParserUtil.parseIdentMap(stream, CLEAR_VALUES);
     if (result.isFailure()) return result;
 
-    activeStyles.setClear(result);
+    activeStyles.setProperty(CSSProperty.CLEAR, result);
     return result;
+  }
+
+  @Override
+  public CSSProperty relatedProperty() {
+    return CSSProperty.CLEAR;
   }
   
 }
