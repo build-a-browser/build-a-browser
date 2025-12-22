@@ -61,7 +61,7 @@ public final class ComplexSelectorParser {
       didEncounterWhitespace |= isWhitespace;
       didEncounterCombinator |= isCombinatorDelim;
       if (!isCombinatorDelim && !isWhitespace) {
-        if (didEncounterWhitespace && !didEncounterCombinator) {
+        if (didEncounterWhitespace && !didEncounterCombinator && !parts.isEmpty()) {
           parts.add(DescendantCombinator.create());
         }
         didEncounterWhitespace = false;

@@ -39,15 +39,9 @@ public class CSSMatcherImp implements CSSMatcher {
   }
 
   @Override
-  public void applyStylesheets(Document document) {
-    StyleSheetList stylesheets = document.styleSheets();
-    for (int i = 0; i < stylesheets.length(); i++) {
-      CSSStyleSheet styleSheet = stylesheets.item(i);
-      CSSRuleList ruleList = styleSheet.cssRules();
-      for (int j = 0; j < ruleList.length(); j++) {
-        applyRule(ruleList.item(j), RuleSource.AUTHOR, i, j);
-      }
-    }
+  public void applyStylesheets(Document document, StyleSheetList uaStyleSheets) {
+    applyStylesheets(uaStyleSheets, RuleSource.USER_AGENT);
+    applyStylesheets(document.styleSheets(), RuleSource.AUTHOR);
   }
 
   @Override
@@ -86,6 +80,17 @@ public class CSSMatcherImp implements CSSMatcher {
     for (ComplexSelector complexSelector: styleRule.complexSelectors()) {
       for (SelectorPart selectorPart: complexSelector.parts()) {
         matchers.addSelectorReference(selectorPart);
+      }
+    }
+  }
+
+  private void applyStylesheets(StyleSheetList stylesheets, RuleSource source) {
+    for (int i = 0; i < stylesheets.length(); i++) {
+      CSSStyleSheet styleSheet = stylesheets.item(i);
+      CSSRuleList ruleList = styleSheet.cssRules();
+      for (int j = 0; j < ruleList.length(); j++) {
+        registerRule(ruleList.item(j));
+        applyRule(ruleList.item(j), source, i, j);
       }
     }
   }

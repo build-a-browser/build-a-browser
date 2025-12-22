@@ -1,13 +1,16 @@
 package net.buildabrowser.babbrowser.browser.render.imp;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -26,8 +29,14 @@ import net.buildabrowser.babbrowser.browser.render.paint.FontMetrics;
 import net.buildabrowser.babbrowser.browser.render.paint.java2d.J2DFontMetrics;
 import net.buildabrowser.babbrowser.browser.render.paint.java2d.J2DPaintCanvas;
 import net.buildabrowser.babbrowser.css.engine.matcher.CSSMatcher;
+import net.buildabrowser.babbrowser.cssbase.cssom.CSSStyleSheet;
+import net.buildabrowser.babbrowser.cssbase.cssom.StyleSheetList;
+import net.buildabrowser.babbrowser.cssbase.parser.CSSParser;
+import net.buildabrowser.babbrowser.cssbase.parser.CSSParser.CSSTokenStream;
+import net.buildabrowser.babbrowser.cssbase.tokenizer.CSSTokenizerInput;
 import net.buildabrowser.babbrowser.dom.Document;
 import net.buildabrowser.babbrowser.dom.mutable.DocumentChangeListener;
+import net.buildabrowser.babbrowser.dom.utils.CommonUtils;
 import net.buildabrowser.babbrowser.htmlparser.HTMLParser;
 
 public class RendererImp implements Renderer {
@@ -43,6 +52,7 @@ public class RendererImp implements Renderer {
   }
 
   public Component render() throws IOException {
+    StyleSheetList uaStyleSheets = loadUAStyleSheets();
     CSSMatcher cssMatcher = CSSMatcher.create(new RenderCSSMatcherContext());
     DocumentChangeListener changeListener = new RenderDocumentChangeListener(cssMatcher.documentChangeListener());
     try (InputStream inputStream = protocolRegistry.request(url)) {
@@ -51,7 +61,7 @@ public class RendererImp implements Renderer {
       long elapsed = System.currentTimeMillis() - time;
       System.out.println("Num millis elapsed: " + elapsed);
       // System.out.println(document);
-      cssMatcher.applyStylesheets(document);
+      cssMatcher.applyStylesheets(document, uaStyleSheets);
       
       JPanel jpanel = new JPanel() {
         @Override
@@ -64,6 +74,9 @@ public class RendererImp implements Renderer {
           content.layout(layoutContext,
             LayoutConstraint.of(this.getWidth()),
             LayoutConstraint.of(this.getHeight()));
+
+          g.setColor(new Color(0xFFFFFF, true));
+          g.fillRect( 0, 0, 500, 500);
           content.paint(new J2DPaintCanvas((Graphics2D) g));
         }
       };
@@ -82,6 +95,16 @@ public class RendererImp implements Renderer {
       documentBox.invalidate(InvalidationLevel.LAYOUT);
 
       return jpanel;
+    }
+  }
+
+  private StyleSheetList loadUAStyleSheets() throws IOException {
+    try (Reader reader = new InputStreamReader(ClassLoader.getSystemClassLoader().getResourceAsStream("ua/ua.css"))) {
+      CSSTokenizerInput tokenizerInput = CSSTokenizerInput.fromReader(reader);
+      CSSTokenStream tokenizerStream = CSSTokenStream.create(tokenizerInput);
+      
+      CSSStyleSheet styleSheet = CommonUtils.rethrow(() -> CSSParser.create().parseAStyleSheet(tokenizerStream));
+      return StyleSheetList.create(List.of(styleSheet));
     }
   }
 

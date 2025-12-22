@@ -1,6 +1,7 @@
 package net.buildabrowser.babbrowser.css.engine.matcher;
 
 import net.buildabrowser.babbrowser.css.engine.matcher.imp.CSSMatcherImp;
+import net.buildabrowser.babbrowser.cssbase.cssom.StyleSheetList;
 import net.buildabrowser.babbrowser.cssbase.cssom.extra.WeightedStyleRule;
 import net.buildabrowser.babbrowser.dom.Document;
 import net.buildabrowser.babbrowser.dom.Node;
@@ -10,7 +11,7 @@ public interface CSSMatcher {
   
   DocumentChangeListener documentChangeListener();
 
-  void applyStylesheets(Document document);
+  void applyStylesheets(Document document, StyleSheetList uaStyleSheets);
 
   interface CSSMatcherContext {
     

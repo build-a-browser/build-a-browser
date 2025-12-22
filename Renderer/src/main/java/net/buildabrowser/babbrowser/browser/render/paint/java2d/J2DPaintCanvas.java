@@ -71,8 +71,8 @@ public class J2DPaintCanvas implements PaintCanvas {
 
   private void postPaintUpdate() {
     J2DPaint paint = paintStack.peek();
-    graphics.setColor(new Color(paint.getColor()));
-    graphics.setBackground(new Color(paint.getColor()));
+    graphics.setColor(new Color(paint.getColor(), true));
+    graphics.setBackground(new Color(paint.getColor(), true));
 
     graphics.translate(
       paint.offsetX() - currentTranslateX,
