@@ -9,6 +9,7 @@ import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.LineBox
 
 public class InlineFormattingContext {
  
+  private final InlineStagingArea stagingArea;
   private final List<LineBox> lineBoxes;
   private LineBox activeLineBox;
 
@@ -17,9 +18,14 @@ public class InlineFormattingContext {
   }
 
   private InlineFormattingContext(LineBox firstLineBox) {
+    this.stagingArea = new InlineStagingArea();
     this.lineBoxes = new LinkedList<>();
     this.activeLineBox = firstLineBox;
     lineBoxes.add(activeLineBox);
+  }
+
+  public InlineStagingArea stagingArea() {
+    return this.stagingArea;
   }
 
   public void addFragment(FlowFragment flowFragment) {
