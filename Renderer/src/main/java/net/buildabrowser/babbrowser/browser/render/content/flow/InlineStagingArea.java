@@ -53,6 +53,11 @@ public class InlineStagingArea {
     return ((StagedText) stagedElements.get(i)).currentText();
   }
 
+  public void setText(int i, String text) {
+    StagedText oldStagedText = (StagedText) stagedElements.get(i);
+    stagedElements.set(i, new StagedText(oldStagedText.boxRef(), text));
+  }
+
   public StagingElement stagingElementAt(int i) {
     return stagedElements.get(i);
   }

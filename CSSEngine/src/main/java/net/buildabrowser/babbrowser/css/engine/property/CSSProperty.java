@@ -4,6 +4,7 @@ import net.buildabrowser.babbrowser.css.engine.property.color.ColorValue.SRGBACo
 import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue;
 import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue.InnerDisplayValue;
 import net.buildabrowser.babbrowser.css.engine.property.display.DisplayValue.OuterDisplayValue;
+import net.buildabrowser.babbrowser.css.engine.property.whitespace.WhitespaceCollapseValue;
 
 public enum CSSProperty {
   
@@ -14,7 +15,8 @@ public enum CSSProperty {
   HEIGHT(nextId(), false, CSSValue.AUTO),
   DISPLAY(nextId(), false, DisplayValue.create(OuterDisplayValue.INLINE, InnerDisplayValue.FLOW)),
   FLOAT(nextId(), false, CSSValue.NONE),
-  CLEAR(nextId(), false, CSSValue.NONE);
+  CLEAR(nextId(), false, CSSValue.NONE),
+  WHITE_SPACE_COLLAPSE(nextId(), true, WhitespaceCollapseValue.COLLAPSE);
 
   private static int propertyId = 0;
 

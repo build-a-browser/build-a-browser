@@ -44,12 +44,13 @@ public class FlowBlockLayout {
     LayoutConstraint heightConstraint
   ) {
     FlowInlineLayout inlineLayout = rootContent.inlineLayout();
+    ActiveStyles boxStyles = box.activeStyles();
 
     boolean isInInline = false;
     for (Box childBox: box.childBoxes()) {
       if (FlowUtil.isBlockLevel(childBox)) {
         if (isInInline) {
-          inlineLayout.stopInline(layoutContext, widthConstraint, heightConstraint);
+          inlineLayout.stopInline(layoutContext, widthConstraint, heightConstraint, boxStyles);
           isInInline = false;
         }
         addToBlock(layoutContext, (ElementBox) childBox, widthConstraint, heightConstraint);
@@ -63,7 +64,7 @@ public class FlowBlockLayout {
     }
 
     if (isInInline) {
-      inlineLayout.stopInline(layoutContext, widthConstraint, heightConstraint);
+      inlineLayout.stopInline(layoutContext, widthConstraint, heightConstraint, boxStyles);
     }
   }
 

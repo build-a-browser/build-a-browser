@@ -24,6 +24,7 @@ import net.buildabrowser.babbrowser.browser.render.layout.LayoutContext;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutUtil;
 import net.buildabrowser.babbrowser.browser.render.paint.FontMetrics;
 import net.buildabrowser.babbrowser.css.engine.property.CSSProperty;
+import net.buildabrowser.babbrowser.css.engine.property.whitespace.WhitespaceCollapseValue;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
 
 public class FlowInlineLayout {
@@ -38,8 +39,12 @@ public class FlowInlineLayout {
   public void stopInline(
     LayoutContext layoutContext,
     LayoutConstraint widthConstraint,
-    LayoutConstraint heightConstraint
+    LayoutConstraint heightConstraint,
+    ActiveStyles parentStyles
   ) {
+    LineWhitespaceCollapser.collapseWhitespace(
+      inlineStack.peek().stagingArea(),
+      (WhitespaceCollapseValue) parentStyles.getProperty(CSSProperty.WHITE_SPACE_COLLAPSE));
     addStagedElements(layoutContext, widthConstraint, heightConstraint);
     stopInlineUnstaged(layoutContext, widthConstraint, heightConstraint);
   }
