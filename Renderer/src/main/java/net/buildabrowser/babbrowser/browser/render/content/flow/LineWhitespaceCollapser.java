@@ -20,12 +20,14 @@ public final class LineWhitespaceCollapser {
 
     boolean lastTextWhitespaceTrailed = false;
     stagingArea.resetCursor();
+    StringBuilder newText = new StringBuilder();
     while (!stagingArea.done()) {
       int nextText = stagingArea.cursorPos();
       switch (stagingArea.next()) {
         case StagedText _ -> {
           lastTextWhitespaceTrailed = switch (modeStack.peek()) {
-            case COLLAPSE, PRESERVE_BREAKS -> collapseWhitespaceInner(stagingArea, nextText, lastTextWhitespaceTrailed);
+            case COLLAPSE, PRESERVE_BREAKS -> collapseWhitespaceInner(
+              stagingArea, nextText, newText, whitespaceCollapse, lastTextWhitespaceTrailed);
             case PRESERVE_SPACES -> preserveSpaces(stagingArea, nextText, lastTextWhitespaceTrailed);
             default -> false;
           };
@@ -41,11 +43,17 @@ public final class LineWhitespaceCollapser {
     }
   }
 
-  private static boolean collapseWhitespaceInner(InlineStagingArea stagingArea, int nextText, boolean lastTextWhitespaceTrailed) {
+  private static boolean collapseWhitespaceInner(
+    InlineStagingArea stagingArea, int nextText, StringBuilder newText,
+    WhitespaceCollapseValue collapseValue, boolean lastTextWhitespaceTrailed
+  ) {
       String originalText = stagingArea.textAt(nextText);
-      StringBuilder newText = new StringBuilder(originalText);
-      colapseAroundSegment(newText);
-      collapseSegmentBreaks(newText);
+      newText.setLength(0);
+      newText.append(originalText);
+      collapseAroundSegment(newText);
+      if (collapseValue.equals(WhitespaceCollapseValue.COLLAPSE)) {
+        collapseSegmentBreaks(newText);
+      }
       collapseTabs(newText);
       lastTextWhitespaceTrailed = collapseSpaceStrings(newText, lastTextWhitespaceTrailed);
       
@@ -67,7 +75,7 @@ public final class LineWhitespaceCollapser {
       transformedText.endsWith(" ");
   }
 
-  private static void colapseAroundSegment(StringBuilder newText) {
+  private static void collapseAroundSegment(StringBuilder newText) {
     int activeSpaceIndex = -1;
     boolean sawSegmentBreak = false;
     for (int i = 0; i < newText.length(); i++) {

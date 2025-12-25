@@ -61,7 +61,6 @@ public final class CombinatorMatchers {
 
       if (priorMatches.contains(lastElementMatched)) {
         newMatches.add(matchedElement);
-        break;
       }
     }
 
