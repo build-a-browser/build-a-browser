@@ -16,14 +16,13 @@ import net.buildabrowser.babbrowser.browser.render.content.flow.InlineStagingAre
 import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.FlowFragment;
 import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.LineBoxFragment;
 import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.ManagedBoxFragment;
-import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.TextFragment;
 import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.UnmanagedBoxFragment;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint.LayoutConstraintType;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutContext;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutUtil;
-import net.buildabrowser.babbrowser.browser.render.paint.FontMetrics;
 import net.buildabrowser.babbrowser.css.engine.property.CSSProperty;
+import net.buildabrowser.babbrowser.css.engine.property.text.TextWrapModeValue;
 import net.buildabrowser.babbrowser.css.engine.property.whitespace.WhitespaceCollapseValue;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
 
@@ -49,8 +48,8 @@ public class FlowInlineLayout {
     stopInlineUnstaged(layoutContext, widthConstraint, heightConstraint);
   }
 
-  public void startInline() {
-    inlineStack.push(new InlineFormattingContext());
+  public void startInline(ActiveStyles parentStyles) {
+    inlineStack.push(new InlineFormattingContext(parentStyles));
   }
 
   public void stageInline(Box box) {
@@ -77,9 +76,10 @@ public class FlowInlineLayout {
   private void addStagedElements(LayoutContext layoutContext, LayoutConstraint widthConstraint, LayoutConstraint heightConstraint) {
     InlineStagingArea stagingArea = inlineStack.peek().stagingArea();
     stagingArea.resetCursor();
+    ActiveStyles parentStyles = inlineStack.peek().activeStyles();
     while (!stagingArea.done()) {
       switch (stagingArea.next()) {
-        case StagedText stagedText -> addTextToInline(layoutContext, stagedText);
+        case StagedText stagedText -> addTextToInline(layoutContext, widthConstraint, parentStyles, stagedText);
         case StagedUnmanagedBox stagedUnmanagedBox -> addUnmanagedBlockToInline(
           layoutContext, stagedUnmanagedBox.elementBox(), widthConstraint, heightConstraint);
         case StagedBlockLevelBox stagedBlockLevelBox -> addBlockLevelToInline(
@@ -151,17 +151,17 @@ public class FlowInlineLayout {
     parentContext.addFragment(newFragment);
   }
 
-  private void addTextToInline(LayoutContext layoutContext, StagedText stagedText) {
-    FontMetrics fontMetrics = layoutContext.fontMetrics();
+  private void addTextToInline(
+    LayoutContext layoutContext, LayoutConstraint parentWidthConstraint,
+    ActiveStyles parentStyles, StagedText stagedText
+) {
     String text = stagedText.currentText();
     if (text.isEmpty()) return;
 
-    int width = fontMetrics.stringWidth(text);
-    int height = fontMetrics.fontHeight();
-    TextFragment newFragment = new TextFragment(width, height, text);
-
-    InlineFormattingContext parentContext = inlineStack.peek();
-    parentContext.addFragment(newFragment);
+    boolean autoWrap = parentStyles.getProperty(CSSProperty.TEXT_WRAP_MODE).equals(TextWrapModeValue.WRAP);
+    FlowTextLayout.layoutText(
+      layoutContext, parentWidthConstraint, stagedText,
+      inlineStack.peek(), autoWrap);
   }
   
   private void positionFragment(LineBoxFragment fragment, int y) {

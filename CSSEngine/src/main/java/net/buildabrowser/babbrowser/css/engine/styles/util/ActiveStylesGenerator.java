@@ -13,6 +13,7 @@ import net.buildabrowser.babbrowser.css.engine.property.display.DisplayParser;
 import net.buildabrowser.babbrowser.css.engine.property.floats.ClearParser;
 import net.buildabrowser.babbrowser.css.engine.property.floats.FloatParser;
 import net.buildabrowser.babbrowser.css.engine.property.size.SizeParser;
+import net.buildabrowser.babbrowser.css.engine.property.text.TextWrapModeParser;
 import net.buildabrowser.babbrowser.css.engine.property.whitespace.WhitespaceCollapseValueParser;
 import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
 import net.buildabrowser.babbrowser.cssbase.cssom.Declaration;
@@ -36,7 +37,8 @@ public final class ActiveStylesGenerator {
     "width", SizeParser.forNormal(CSSProperty.WIDTH),
     "height", SizeParser.forNormal(CSSProperty.HEIGHT),
 
-    "white-space-collapse", new WhitespaceCollapseValueParser()
+    "white-space-collapse", new WhitespaceCollapseValueParser(),
+    "text-wrap-mode", new TextWrapModeParser()
   );
   
   private ActiveStylesGenerator() {}

@@ -56,7 +56,7 @@ public class FlowBlockLayout {
         addToBlock(layoutContext, (ElementBox) childBox, widthConstraint, heightConstraint);
       } else {
         if (!isInInline) {
-          inlineLayout.startInline();
+          inlineLayout.startInline(boxStyles);
           isInInline = true;
         }
         inlineLayout.stageInline(childBox);

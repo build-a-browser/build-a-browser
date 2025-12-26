@@ -1,23 +1,25 @@
 package net.buildabrowser.babbrowser.browser.render.content.flow;
 
+import java.util.ArrayDeque;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Stack;
 
 import net.buildabrowser.babbrowser.browser.render.box.ElementBox;
 import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.FlowFragment;
 import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.LineBoxFragment;
 import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.ManagedBoxFragment;
+import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.TextFragment;
 
 public class LineBox {
 
-  private final Stack<LineSegment> lineSegments;
+  private final ArrayDeque<LineSegment> lineSegments;
 
   public LineBox() {
-    this.lineSegments = new Stack<>();
-    lineSegments.add(new LineSegment(null, new LinkedList<>()));
+    this.lineSegments = new ArrayDeque<>();
+    lineSegments.push(new LineSegment(null, new LinkedList<>()));
   }
 
-  private LineBox(Stack<LineSegment> segments) {
+  private LineBox(ArrayDeque<LineSegment> segments) {
     this.lineSegments = segments;
   }
 
@@ -28,8 +30,13 @@ public class LineBox {
     lineSegments.peek().fragments().add(flowFragment);
   }
 
+  public void appendText(String text, int width, int height) {
+    // TODO: Merge fragments to reduce memory
+    addFragment(new TextFragment(width, height, text));
+  }
+
   public void pushElement(ElementBox elementBox) {
-    lineSegments.add(new LineSegment(elementBox, new LinkedList<>()));
+    lineSegments.push(new LineSegment(elementBox, new LinkedList<>()));
   }
 
   public ElementBox popElement() {
@@ -52,9 +59,10 @@ public class LineBox {
   }
 
   public LineBox split() {
-    Stack<LineSegment> newSegments = new Stack<>();
-    for (int i = 0; i < lineSegments.size(); i++) {
-      LineSegment oldSegment = lineSegments.get(i);
+    ArrayDeque<LineSegment> newSegments = new ArrayDeque<>();
+    Iterator<LineSegment> it = lineSegments.descendingIterator();
+    while (it.hasNext()) {
+      LineSegment oldSegment = it.next();
       LineSegment newSegment = new LineSegment(oldSegment.box(), new LinkedList<>());
       newSegments.push(newSegment);
     }
