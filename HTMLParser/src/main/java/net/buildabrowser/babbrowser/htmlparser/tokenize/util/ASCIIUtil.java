@@ -18,4 +18,19 @@ public final class ASCIIUtil {
     return ch;
   }
 
+  public static boolean isHexDigit(int ch) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'isHexDigit'");
+  }
+
+  public static boolean isDigit(int ch) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'isDigit'");
+  }
+
+  public static int hexValue(int ch) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'hexValue'");
+  }
+
 }

@@ -41,7 +41,7 @@ public class HTMLParserImp implements HTMLParser {
     TokenizeState tokenizeState = tokenizeContext.getTokenizeState();
     List<String> lookaheadOptions = tokenizeState.lookaheadOptions();
 
-    if (lookaheadOptions == null) {
+    if (lookaheadOptions == null || ch == -1) {
       tokenizeState.consume(ch, tokenizeContext, parseContext);
     } else {
       tokenizeBuffer.appendCodePoint(ch);

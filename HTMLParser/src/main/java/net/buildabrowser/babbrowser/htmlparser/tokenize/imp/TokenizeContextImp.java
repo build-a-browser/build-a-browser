@@ -20,6 +20,8 @@ public class TokenizeContextImp implements TokenizeContext {
   private final CommentToken commentToken = CommentToken.create();
 
   private TokenizeState tokenizeState = TokenizeStates.dataState;
+  private TokenizeState returnState;
+  private int charRefCode;
 
   public TokenizeContextImp(PushbackReader pushbackReader) {
     this.pushbackReader = pushbackReader;
@@ -39,6 +41,16 @@ public class TokenizeContextImp implements TokenizeContext {
   @Override
   public TokenizeState getTokenizeState() {
     return this.tokenizeState;
+  }
+
+  @Override
+  public void setReturnState(TokenizeState returnState) {
+    this.returnState = returnState;
+  }
+
+  @Override
+  public TokenizeState getReturnState() {
+    return this.returnState;
   }
 
   @Override
@@ -75,6 +87,21 @@ public class TokenizeContextImp implements TokenizeContext {
   @Override
   public CommentToken currentCommentToken() {
     return this.commentToken;
+  }
+
+  @Override
+  public void setCharacterReferenceCode(int code) {
+    this.charRefCode = code;
+  }
+
+  @Override
+  public int getCharacterReferenceCode() {
+    return this.charRefCode;
+  }
+
+  @Override
+  public void flushCodePointsConsumedAsACharacterReference() {
+    // TODO
   }
 
   private class TemporaryBufferImp implements TemporaryBuffer {

@@ -1,5 +1,7 @@
 package net.buildabrowser.babbrowser.htmlparser.tokenize.imp;
 
+import java.util.Map;
+
 import net.buildabrowser.babbrowser.htmlparser.tokenize.TokenizeState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.AfterAttributeValueQuotedState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.AfterDoctypeNameState;
@@ -7,6 +9,7 @@ import net.buildabrowser.babbrowser.htmlparser.tokenize.states.AfterDoctypePubli
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.AfterDoctypePublicKeywordState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.AfterDoctypeSystemIdentifierState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.AfterDoctypeSystemKeywordState;
+import net.buildabrowser.babbrowser.htmlparser.tokenize.states.AmbiguousAmpersandState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.AttributeNameState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.AttributeValueDoubleQuotedState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.AttributeValueSingleQuotedState;
@@ -18,6 +21,7 @@ import net.buildabrowser.babbrowser.htmlparser.tokenize.states.BeforeDoctypePubl
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.BeforeDoctypeSystemIdentifierState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.BetweenDoctypePublicAndSystemIdentifiersState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.BogusDoctypeState;
+import net.buildabrowser.babbrowser.htmlparser.tokenize.states.CharacterReferenceState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.CommentEndBangState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.CommentEndDashState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.CommentEndState;
@@ -28,6 +32,8 @@ import net.buildabrowser.babbrowser.htmlparser.tokenize.states.CommentStartDashS
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.CommentStartState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.CommentState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.DataState;
+import net.buildabrowser.babbrowser.htmlparser.tokenize.states.DecimalCharacterReferenceStartState;
+import net.buildabrowser.babbrowser.htmlparser.tokenize.states.DecimalCharacterReferenceState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.DoctypeNameState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.DoctypePublicIdentifierDoubleQuotedState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.DoctypePublicIdentifierSingleQuotedState;
@@ -36,6 +42,9 @@ import net.buildabrowser.babbrowser.htmlparser.tokenize.states.DoctypeSystemIden
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.DoctypeSystemIdentifierSingleQuotedState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.EndTagOpenState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.MarkupDeclarationOpenState;
+import net.buildabrowser.babbrowser.htmlparser.tokenize.states.NamedCharacterReferenceState;
+import net.buildabrowser.babbrowser.htmlparser.tokenize.states.NumericCharacterReferenceEndState;
+import net.buildabrowser.babbrowser.htmlparser.tokenize.states.NumericCharacterReferenceState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.RawTextEndTagNameState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.RawTextEndTagOpenState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.RawTextLessThanSignState;
@@ -55,6 +64,7 @@ public final class TokenizeStates {
   public static final TokenizeState afterDoctypeSystemIdentifierState = new AfterDoctypeSystemIdentifierState();
   public static final TokenizeState afterDoctypeSystemKeywordState = new AfterDoctypeSystemKeywordState();
   public static final TokenizeState afterAttributeNameState = new AttributeNameState();
+  public static final TokenizeState ambiguousAmpersandState = new AmbiguousAmpersandState();
   public static final TokenizeState attributeValueDoubleQuotedState = new AttributeValueDoubleQuotedState();
   public static final TokenizeState attributeValueSingleQuotedState = new AttributeValueSingleQuotedState();
   public static final TokenizeState attributeValueUnquotedState = new AttributeValueUnquotedState();
@@ -65,6 +75,7 @@ public final class TokenizeStates {
   public static final TokenizeState beforeDoctypeSystemIdentifierState = new BeforeDoctypeSystemIdentifierState();
   public static final TokenizeState betweenDoctypePublicAndSystemIdentifiersState = new BetweenDoctypePublicAndSystemIdentifiersState();
   public static final TokenizeState bogusDoctypeState = new BogusDoctypeState();
+  public static final TokenizeState characterReferenceState = new CharacterReferenceState();
   public static final TokenizeState commentEndBangState = new CommentEndBangState();
   public static final TokenizeState commentEndDashState = new CommentEndDashState();
   public static final TokenizeState commentEndState = new CommentEndState();
@@ -76,6 +87,8 @@ public final class TokenizeStates {
   public static final TokenizeState commentStartState = new CommentStartState();
   public static final TokenizeState commentState = new CommentState();
   public static final TokenizeState dataState = new DataState();
+  public static final TokenizeState decimalCharacterReferenceStartState = new DecimalCharacterReferenceStartState();
+  public static final TokenizeState decimalCharacterReferenceState = new DecimalCharacterReferenceState();
   public static final TokenizeState doctypeNameState = new DoctypeNameState();
   public static final TokenizeState doctypePublicIdentifierDoubleQuotedState = new DoctypePublicIdentifierDoubleQuotedState();
   public static final TokenizeState doctypePublicIdentifierSingleQuotedState = new DoctypePublicIdentifierSingleQuotedState();
@@ -83,7 +96,12 @@ public final class TokenizeStates {
   public static final TokenizeState doctypeSystemIdentifierDoubleQuotedState = new DoctypeSystemIdentifierDoubleQuotedState();
   public static final TokenizeState doctypeSystemIdentifierSingleQuotedState = new DoctypeSystemIdentifierSingleQuotedState();
   public static final TokenizeState endTagOpenState = new EndTagOpenState();
+  public static final TokenizeState hexadecimalCharacterReferenceStartState = new DecimalCharacterReferenceStartState();
+  public static final TokenizeState hexadecimalCharacterReferenceState = new DecimalCharacterReferenceState();
   public static final TokenizeState markupDeclarationOpenState = new MarkupDeclarationOpenState();
+  public static final TokenizeState namedCharacterReferenceState = new NamedCharacterReferenceState(Map.of());
+  public static final TokenizeState numericCharacterReferenceEndState = new NumericCharacterReferenceEndState();
+  public static final TokenizeState numericCharacterReferenceState = new NumericCharacterReferenceState();
   public static final TokenizeState rawTextEndTagNameState = new RawTextEndTagNameState();
   public static final TokenizeState rawTextEndTagOpenState = new RawTextEndTagOpenState();
   public static final TokenizeState rawTextLessThanSignState = new RawTextLessThanSignState();

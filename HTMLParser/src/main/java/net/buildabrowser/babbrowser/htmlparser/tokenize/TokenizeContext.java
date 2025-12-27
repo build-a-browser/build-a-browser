@@ -17,6 +17,10 @@ public interface TokenizeContext {
   void reconsumeInTokenizeState(int ch, TokenizeState tokenizeState) throws IOException;
 
   TokenizeState getTokenizeState();
+
+  void setReturnState(TokenizeState returnState);
+
+  TokenizeState getReturnState();
   
   TemporaryBuffer temporaryBuffer();
 
@@ -31,6 +35,12 @@ public interface TokenizeContext {
   CommentToken beginCommentToken();
 
   CommentToken currentCommentToken();
+
+  void setCharacterReferenceCode(int i);
+
+  int getCharacterReferenceCode();
+
+  void flushCodePointsConsumedAsACharacterReference();
 
   interface TemporaryBuffer {
 
