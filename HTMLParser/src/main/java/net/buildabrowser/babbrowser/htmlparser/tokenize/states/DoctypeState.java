@@ -20,14 +20,14 @@ public class DoctypeState implements TokenizeState {
         tokenizeContext.reconsumeInTokenizeState(ch, TokenizeStates.beforeDoctypeNameState);
         break;
       case TokenizeContext.EOF:
-        // TODO: Parse error
+        parseContext.parseError();
         DoctypeToken doctypeToken = DoctypeToken.create();
         doctypeToken.setForceQuirks(true);
         parseContext.emitDoctypeToken(doctypeToken);
         parseContext.emitEOFToken();
         break;
       default:
-        // TODO: Parse error
+        parseContext.parseError();
         tokenizeContext.reconsumeInTokenizeState(ch, TokenizeStates.beforeDoctypeNameState);
     }
   }

@@ -19,18 +19,23 @@ public final class ASCIIUtil {
   }
 
   public static boolean isHexDigit(int ch) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'isHexDigit'");
+    return hexValue(ch) != -1;
   }
 
   public static boolean isDigit(int ch) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'isDigit'");
+    return ch >= '0' && ch <='9';
   }
 
   public static int hexValue(int ch) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'hexValue'");
+    if (ch >= '0' && ch <='9') {
+      return ch - '0';
+    } else if (ch >= 'a' && ch <= 'f') {
+      return ch - 'a' + 10;
+    } else if (ch >= 'A' && ch <= 'F') {
+      return ch - 'A' + 10;
+    }
+
+    return -1;
   }
 
 }

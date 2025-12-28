@@ -20,7 +20,7 @@ public class AfterDoctypeNameState implements TokenizeState {
         tokenizeContext.setTokenizeState(TokenizeStates.dataState);
         parseContext.emitDoctypeToken(tokenizeContext.currentDoctypeToken());
       case TokenizeContext.EOF:
-        // TODO: Parse error
+        parseContext.parseError();
         DoctypeToken doctypeToken = tokenizeContext.currentDoctypeToken();
         doctypeToken.setForceQuirks(true);
         parseContext.emitDoctypeToken(doctypeToken);

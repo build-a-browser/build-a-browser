@@ -27,11 +27,11 @@ public class DoctypeNameState implements TokenizeState {
         parseContext.emitDoctypeToken(tokenizeContext.currentDoctypeToken());
         break;
       case 0:
-        // TODO: Parse error
+        parseContext.parseError();
         tokenizeContext.currentDoctypeToken().appendCodePointToName('\uFFFD');
         break;
       case TokenizeContext.EOF:
-        // TODO: Parse error
+        parseContext.parseError();
         DoctypeToken doctypeToken = tokenizeContext.currentDoctypeToken();
         doctypeToken.setForceQuirks(true);
         parseContext.emitDoctypeToken(doctypeToken);

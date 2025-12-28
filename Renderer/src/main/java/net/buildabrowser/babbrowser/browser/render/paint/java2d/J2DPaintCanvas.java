@@ -3,7 +3,8 @@ package net.buildabrowser.babbrowser.browser.render.paint.java2d;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.function.Consumer;
 
 import net.buildabrowser.babbrowser.browser.render.paint.FontMetrics;
@@ -12,7 +13,7 @@ import net.buildabrowser.babbrowser.browser.render.paint.PaintCanvas;
 
 public class J2DPaintCanvas implements PaintCanvas {
 
-  private final Stack<J2DPaint> paintStack = new Stack<>();
+  private final Deque<J2DPaint> paintStack = new ArrayDeque<>();
   private final Graphics2D graphics;
 
   int currentTranslateX, currentTranslateY;

@@ -1,6 +1,7 @@
 package net.buildabrowser.babbrowser.browser.render.content.flow;
 
 import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class InlineFormattingContext {
  
   private final InlineStagingArea stagingArea;
   private final List<LineBox> lineBoxes;
-  private final ArrayDeque<ActiveStyles> stylesStack;
+  private final Deque<ActiveStyles> stylesStack;
   private LineBox activeLineBox;
 
   public InlineFormattingContext(ActiveStyles initialStyles) {
@@ -21,7 +22,7 @@ public class InlineFormattingContext {
     stylesStack.push(initialStyles);
   }
 
-  private InlineFormattingContext(LineBox firstLineBox, ArrayDeque<ActiveStyles> stylesStack) {
+  private InlineFormattingContext(LineBox firstLineBox, Deque<ActiveStyles> stylesStack) {
     this.stagingArea = new InlineStagingArea();
     this.lineBoxes = new LinkedList<>();
     this.stylesStack = stylesStack;

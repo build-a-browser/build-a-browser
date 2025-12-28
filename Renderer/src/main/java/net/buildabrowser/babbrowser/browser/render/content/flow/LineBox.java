@@ -1,6 +1,7 @@
 package net.buildabrowser.babbrowser.browser.render.content.flow;
 
 import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -12,7 +13,7 @@ import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.TextFra
 
 public class LineBox {
 
-  private final ArrayDeque<LineSegment> lineSegments;
+  private final Deque<LineSegment> lineSegments;
 
   public LineBox() {
     this.lineSegments = new ArrayDeque<>();

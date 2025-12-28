@@ -23,19 +23,19 @@ public class BeforeDoctypeNameState implements TokenizeState {
       case '\t', '\n', '\f', ' ':
         break;
       case 0:
-        // TODO: Parse error
+        parseContext.parseError();
         tokenizeContext.beginDoctypeToken().appendCodePointToName('\uFFFD');
         tokenizeContext.setTokenizeState(TokenizeStates.doctypeNameState);
         break;
       case '>':
-        // TODO: Parse error
+        parseContext.parseError();
         DoctypeToken doctypeToken = tokenizeContext.beginDoctypeToken();
         doctypeToken.setForceQuirks(true);
         tokenizeContext.setTokenizeState(TokenizeStates.dataState);
         parseContext.emitDoctypeToken(doctypeToken);
         break;
       case TokenizeContext.EOF:
-        // TODO: Parse error
+        parseContext.parseError();
         doctypeToken = tokenizeContext.beginDoctypeToken();
         doctypeToken.setForceQuirks(true);
         parseContext.emitDoctypeToken(doctypeToken);

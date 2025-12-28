@@ -23,7 +23,7 @@ public class CommentEndState implements TokenizeState {
         tokenizeContext.currentCommentToken().appendCodePointToData('-');
         break;
       case TokenizeContext.EOF:
-        // TODO: Parse-error
+        parseContext.parseError();
         parseContext.emitCommentToken(tokenizeContext.currentCommentToken());
         parseContext.emitEOFToken();
         break;

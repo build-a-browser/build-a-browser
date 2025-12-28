@@ -16,7 +16,7 @@ public class CommentStartState implements TokenizeState {
         tokenizeContext.setTokenizeState(TokenizeStates.commentStartDashState);
         break;
       case '>':
-        // TODO: Parse-error
+        parseContext.parseError();
         tokenizeContext.setTokenizeState(TokenizeStates.dataState);
         break;
       default:

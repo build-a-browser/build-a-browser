@@ -16,7 +16,7 @@ public class CommentLessThanSignBangDashDashState implements TokenizeState {
         tokenizeContext.reconsumeInTokenizeState(ch, TokenizeStates.commentEndState);
         break;
       default:
-        // TODO: Parse error
+        parseContext.parseError();
         tokenizeContext.reconsumeInTokenizeState(ch, TokenizeStates.commentEndState);
         break;
     }

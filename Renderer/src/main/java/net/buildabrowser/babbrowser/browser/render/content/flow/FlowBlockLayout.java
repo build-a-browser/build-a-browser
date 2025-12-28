@@ -1,6 +1,7 @@
 package net.buildabrowser.babbrowser.browser.render.content.flow;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import net.buildabrowser.babbrowser.browser.render.box.Box;
 import net.buildabrowser.babbrowser.browser.render.box.ElementBox;
@@ -14,7 +15,7 @@ import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
 
 public class FlowBlockLayout {
 
-  private final Stack<BlockFormattingContext> blockStack = new Stack<>();
+  private final Deque<BlockFormattingContext> blockStack = new ArrayDeque<>();
   private final FlowRootContent rootContent;
   
   private BlockFormattingContext rootContext;

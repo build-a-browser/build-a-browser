@@ -1,7 +1,8 @@
 package net.buildabrowser.babbrowser.browser.render.content.flow;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
-import java.util.Stack;
 
 import net.buildabrowser.babbrowser.browser.render.box.Box;
 import net.buildabrowser.babbrowser.browser.render.box.ElementBox;
@@ -28,7 +29,7 @@ import net.buildabrowser.babbrowser.css.engine.styles.ActiveStyles;
 
 public class FlowInlineLayout {
 
-  private final Stack<InlineFormattingContext> inlineStack = new Stack<>();
+  private final Deque<InlineFormattingContext> inlineStack = new ArrayDeque<>();
   private final FlowRootContent rootContent;
 
   public FlowInlineLayout(FlowRootContent rootContent) {

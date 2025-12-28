@@ -20,11 +20,11 @@ public class CommentState implements TokenizeState {
         tokenizeContext.setTokenizeState(TokenizeStates.commentEndDashState);
         break;
       case 0:
-        // TODO: Parse error
+        parseContext.parseError();
         tokenizeContext.currentCommentToken().appendCodePointToData(0xFFFFD);
         break;
       case TokenizeContext.EOF:
-        // TODO: Parse error
+        parseContext.parseError();
         parseContext.emitCommentToken(tokenizeContext.currentCommentToken());
         parseContext.emitEOFToken();
         break;

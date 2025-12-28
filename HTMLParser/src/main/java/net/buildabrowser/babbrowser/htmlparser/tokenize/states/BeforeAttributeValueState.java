@@ -19,7 +19,7 @@ public class BeforeAttributeValueState implements TokenizeState {
         tokenizeContext.setTokenizeState(TokenizeStates.attributeValueSingleQuotedState);
         break;
       case '>':
-        // TODO: Parse error
+        parseContext.parseError();
         tokenizeContext.setTokenizeState(TokenizeStates.dataState);
         parseContext.emitTagToken(tokenizeContext.currentTagToken());
         break;

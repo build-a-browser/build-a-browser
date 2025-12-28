@@ -16,7 +16,7 @@ public class CommentEndDashState implements TokenizeState {
         tokenizeContext.setTokenizeState(TokenizeStates.commentEndState);
         break;
       case TokenizeContext.EOF:
-        // TODO: Parse error
+        parseContext.parseError();
         parseContext.emitCommentToken(tokenizeContext.currentCommentToken());
         parseContext.emitEOFToken();
         break;

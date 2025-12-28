@@ -21,15 +21,15 @@ public class AttributeValueUnquotedState implements TokenizeState {
         parseContext.emitTagToken(tokenizeContext.currentTagToken());
         break;
       case 0:
-        // TODO: Parse Error
+        parseContext.parseError();
         tokenizeContext.currentTagToken().appendToAttributeValue(0xFFFD);
         break;
       case TokenizeContext.EOF:
-        // TODO: Parse Error
+        parseContext.parseError();
         parseContext.emitEOFToken();
         break;
       case '"', '\'', '<', '=', '`':
-        // TODO: Parse Error
+        parseContext.parseError();
         // Fall-through
       default:
         tokenizeContext.currentTagToken().appendToAttributeValue(ch);

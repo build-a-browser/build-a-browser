@@ -16,12 +16,12 @@ public class CommentStartDashState implements TokenizeState {
         tokenizeContext.setTokenizeState(TokenizeStates.commentEndState);
         break;
       case '>':
-        // TODO: Parse error
+        parseContext.parseError();
         tokenizeContext.setTokenizeState(TokenizeStates.dataState);
         parseContext.emitCommentToken(tokenizeContext.currentCommentToken());
         break;
       case TokenizeContext.EOF:
-        // TODO: Parse error
+        parseContext.parseError();
         parseContext.emitCommentToken(tokenizeContext.currentCommentToken());
         parseContext.emitEOFToken();
         break;

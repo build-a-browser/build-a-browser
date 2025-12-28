@@ -1,6 +1,7 @@
 package net.buildabrowser.babbrowser.browser.render.content.flow;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import net.buildabrowser.babbrowser.browser.render.content.flow.InlineStagingArea.ManagedBoxEntryMarker;
 import net.buildabrowser.babbrowser.browser.render.content.flow.InlineStagingArea.ManagedBoxExitMarker;
@@ -15,7 +16,7 @@ public final class LineWhitespaceCollapser {
 
   public static void collapseWhitespace(InlineStagingArea stagingArea, WhitespaceCollapseValue whitespaceCollapse) {
     // TODO: Avoid a stack allocation...
-    Stack<WhitespaceCollapseValue> modeStack = new Stack<>();
+    Deque<WhitespaceCollapseValue> modeStack = new ArrayDeque<>();
     modeStack.push(whitespaceCollapse);
 
     boolean lastTextWhitespaceTrailed = false;
