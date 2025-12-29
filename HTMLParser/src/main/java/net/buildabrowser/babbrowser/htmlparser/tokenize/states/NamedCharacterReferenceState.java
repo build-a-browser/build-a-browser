@@ -25,27 +25,33 @@ public class NamedCharacterReferenceState implements TokenizeState {
 
   @Override
   public void consume(int ch, TokenizeContext tokenizeContext, ParseContext parseContext) throws IOException {
-    // Dummy for now
-    tokenizeContext.setTokenizeState(TokenizeStates.dataState);
+    // Automatically occurs upon no lookahead matched
+    tokenizeContext.flushCodePointsConsumedAsACharacterReference(parseContext);
+    // Since this stage technically does not consume unless a match is present,
+    // but this method auto-consumes, reconsume.
+    tokenizeContext.reconsumeInTokenizeState(ch, TokenizeStates.ambiguousAmpersandState);
   }
 
   @Override
   public boolean lookaheadMatched(String value, TokenizeContext tokenizeContext, ParseContext parseContext) {
-    // TODO:Is it case sensitive?
-    if (referenceMap.containsKey("&" + value)) {
-      return true;
-    } else {
-      // TODO: Finish
-      tokenizeContext.setTokenizeState(TokenizeStates.dataState);
-      return false;
+    String resolvedValue = referenceMap.get("&" + value);
+    if (resolvedValue == null) return false;
+
+    if (!value.endsWith(";")) {
+      parseContext.parseError();
     }
+
+    tokenizeContext.temporaryBuffer().clear();
+    tokenizeContext.temporaryBuffer().append(resolvedValue);
+    tokenizeContext.flushCodePointsConsumedAsACharacterReference(parseContext);
+    tokenizeContext.setTokenizeState(tokenizeContext.getReturnState());
+
+    return true;
   }
 
   @Override
   public List<String> lookaheadOptions() {
     return this.optionsWithoutAmpersand;
   }
-
-  // TODO: Finish this case
   
 }

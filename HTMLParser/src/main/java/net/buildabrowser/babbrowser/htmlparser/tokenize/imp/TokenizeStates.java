@@ -1,7 +1,5 @@
 package net.buildabrowser.babbrowser.htmlparser.tokenize.imp;
 
-import java.util.Map;
-
 import net.buildabrowser.babbrowser.htmlparser.tokenize.TokenizeState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.AfterAttributeValueQuotedState;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.states.AfterDoctypeNameState;
@@ -99,7 +97,7 @@ public final class TokenizeStates {
   public static final TokenizeState hexadecimalCharacterReferenceStartState = new DecimalCharacterReferenceStartState();
   public static final TokenizeState hexadecimalCharacterReferenceState = new DecimalCharacterReferenceState();
   public static final TokenizeState markupDeclarationOpenState = new MarkupDeclarationOpenState();
-  public static final TokenizeState namedCharacterReferenceState = new NamedCharacterReferenceState(Map.of());
+  public static final TokenizeState namedCharacterReferenceState = new NamedCharacterReferenceState(NamedCharacterReferences.loadReferences());
   public static final TokenizeState numericCharacterReferenceEndState = new NumericCharacterReferenceEndState();
   public static final TokenizeState numericCharacterReferenceState = new NumericCharacterReferenceState();
   public static final TokenizeState rawTextEndTagNameState = new RawTextEndTagNameState();

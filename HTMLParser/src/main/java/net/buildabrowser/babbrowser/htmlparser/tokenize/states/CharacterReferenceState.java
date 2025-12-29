@@ -22,7 +22,7 @@ public class CharacterReferenceState implements TokenizeState {
     } else if (ASCIIUtil.isAlpha(ch)) {
       tokenizeContext.reconsumeInTokenizeState(ch, TokenizeStates.namedCharacterReferenceState);
     } else {
-      tokenizeContext.flushCodePointsConsumedAsACharacterReference();
+      tokenizeContext.flushCodePointsConsumedAsACharacterReference(parseContext);
       tokenizeContext.reconsumeInTokenizeState(ch, tokenizeContext.getTokenizeState());
     }
   }

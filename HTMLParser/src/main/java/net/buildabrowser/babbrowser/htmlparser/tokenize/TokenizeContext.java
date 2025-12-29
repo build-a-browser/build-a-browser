@@ -3,6 +3,7 @@ package net.buildabrowser.babbrowser.htmlparser.tokenize;
 import java.io.IOException;
 import java.io.PushbackReader;
 
+import net.buildabrowser.babbrowser.htmlparser.shared.ParseContext;
 import net.buildabrowser.babbrowser.htmlparser.token.CommentToken;
 import net.buildabrowser.babbrowser.htmlparser.token.DoctypeToken;
 import net.buildabrowser.babbrowser.htmlparser.token.TagToken;
@@ -40,11 +41,13 @@ public interface TokenizeContext {
 
   int getCharacterReferenceCode();
 
-  void flushCodePointsConsumedAsACharacterReference();
+  void flushCodePointsConsumedAsACharacterReference(ParseContext parseContext);
 
   interface TemporaryBuffer {
 
     void append(int ch);
+
+    void append(String str);
 
     String get();
 

@@ -156,4 +156,64 @@ public class HTMLParserTest {
       document);
   }
 
+  @Test
+  @DisplayName("Can parse document with invalid named character reference")
+  public void canParseDocumentWithInvalidNamedCharacterReference() throws IOException {
+    Document document = htmlParser.parse(new StringReader("&invalid;"));
+    assertTreeMatches(
+      testDocumentToBody(testText("&invalid;")),
+      document);
+  }
+
+  @Test
+  @DisplayName("Can parse document with valid named character reference")
+  public void canParseDocumentWithValidNamedCharacterReference() throws IOException {
+    Document document = htmlParser.parse(new StringReader("&lt;"));
+    assertTreeMatches(
+      testDocumentToBody(testText("<")),
+      document);
+  }
+
+  @Test
+  @DisplayName("Can parse document with valid decimal character reference")
+  public void canParseDocumentWithValidDecimalCharacterReference() throws IOException {
+    Document document = htmlParser.parse(new StringReader("&#60;"));
+    assertTreeMatches(
+      testDocumentToBody(testText("<")),
+      document);
+  }
+
+  @Test
+  @DisplayName("Can parse document with valid hexdecimal character reference")
+  public void canParseDocumentWithValidHexadecimalCharacterReference() throws IOException {
+    Document document = htmlParser.parse(new StringReader("&#x3C;"));
+    assertTreeMatches(
+      testDocumentToBody(testText("<")),
+      document);
+  }
+
+  @Test
+  @DisplayName("Can parse document with invalid named character reference in attribute")
+  public void canParseDocumentWithInvalidNamedCharacterReferenceInAttribute() throws IOException {
+    Document document = htmlParser.parse(new StringReader("<a href=\"&invalid;\"></a>"));
+    assertTreeMatches(
+      testDocumentToBody(
+        testElement("a", Map.of(
+          "href", "&invalid;"
+        ))),
+      document);
+  }
+
+  @Test
+  @DisplayName("Can parse document with valid named character reference in attribute")
+  public void canParseDocumentWithValidNamedCharacterReferenceInAttribute() throws IOException {
+    Document document = htmlParser.parse(new StringReader("<a href=\"&lt;\"></a>"));
+    assertTreeMatches(
+      testDocumentToBody(
+        testElement("a", Map.of(
+          "href", "<"
+        ))),
+      document);
+  }
+
 }

@@ -55,7 +55,7 @@ public class NumericCharacterReferenceEndState implements TokenizeState {
 
     tokenizeContext.temporaryBuffer().clear();
     tokenizeContext.temporaryBuffer().append(charRefCode);
-    tokenizeContext.flushCodePointsConsumedAsACharacterReference();
+    tokenizeContext.flushCodePointsConsumedAsACharacterReference(parseContext);
     // I think this reconsumes
     tokenizeContext.reconsumeInTokenizeState(ch, tokenizeContext.getReturnState());
   }

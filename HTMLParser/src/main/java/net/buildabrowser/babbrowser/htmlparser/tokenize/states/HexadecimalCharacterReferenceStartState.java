@@ -16,7 +16,7 @@ public class HexadecimalCharacterReferenceStartState implements TokenizeState {
       tokenizeContext.reconsumeInTokenizeState(ch, TokenizeStates.hexadecimalCharacterReferenceState);
     } else {
       parseContext.parseError();
-      tokenizeContext.flushCodePointsConsumedAsACharacterReference();
+      tokenizeContext.flushCodePointsConsumedAsACharacterReference(parseContext);
       tokenizeContext.reconsumeInTokenizeState(ch, tokenizeContext.getReturnState());
     }
   }

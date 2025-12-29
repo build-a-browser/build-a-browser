@@ -16,7 +16,7 @@ public class DecimalCharacterReferenceStartState implements TokenizeState {
       tokenizeContext.reconsumeInTokenizeState(ch, TokenizeStates.decimalCharacterReferenceState);
     } else {
       parseContext.parseError();
-      tokenizeContext.flushCodePointsConsumedAsACharacterReference();
+      tokenizeContext.flushCodePointsConsumedAsACharacterReference(parseContext);
       tokenizeContext.reconsumeInTokenizeState(ch, tokenizeContext.getReturnState());
     }
   }

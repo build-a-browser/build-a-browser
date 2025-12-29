@@ -5,6 +5,7 @@ import java.io.IOException;
 import net.buildabrowser.babbrowser.htmlparser.shared.ParseContext;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.TokenizeContext;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.TokenizeState;
+import net.buildabrowser.babbrowser.htmlparser.tokenize.imp.TokenizeStates;
 import net.buildabrowser.babbrowser.htmlparser.tokenize.util.ASCIIUtil;
 
 public class AmbiguousAmpersandState implements TokenizeState {
@@ -15,7 +16,11 @@ public class AmbiguousAmpersandState implements TokenizeState {
       parseContext.parseError();
       tokenizeContext.reconsumeInTokenizeState(ch, tokenizeContext.getReturnState());
     } else if (ASCIIUtil.isAlpha(ch)) {
-      // TODO
+      if (tokenizeContext.getReturnState().equals(TokenizeStates.dataState)) {
+        parseContext.emitCharacterToken(ch);
+      } else {
+        tokenizeContext.currentTagToken().appendToAttributeValue(ch);
+      }
     } else {
       tokenizeContext.reconsumeInTokenizeState(ch, tokenizeContext.getReturnState());
     }

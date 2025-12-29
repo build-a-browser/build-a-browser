@@ -13,7 +13,7 @@ public class DecimalCharacterReferenceState implements TokenizeState {
   @Override
   public void consume(int ch, TokenizeContext tokenizeContext, ParseContext parseContext) throws IOException {
     if (ASCIIUtil.isDigit(ch)) {
-      tokenizeContext.setCharacterReferenceCode(tokenizeContext.getCharacterReferenceCode() * 16 + ch - 0x30);
+      tokenizeContext.setCharacterReferenceCode(tokenizeContext.getCharacterReferenceCode() * 16 + ch - '0');
     } else if (ch == ';') {
       tokenizeContext.setTokenizeState(TokenizeStates.numericCharacterReferenceEndState);
     } else {

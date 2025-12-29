@@ -3,6 +3,7 @@ package net.buildabrowser.babbrowser.htmlparser.tokenize.imp;
 import java.io.IOException;
 import java.io.PushbackReader;
 
+import net.buildabrowser.babbrowser.htmlparser.shared.ParseContext;
 import net.buildabrowser.babbrowser.htmlparser.token.CommentToken;
 import net.buildabrowser.babbrowser.htmlparser.token.DoctypeToken;
 import net.buildabrowser.babbrowser.htmlparser.token.TagToken;
@@ -100,8 +101,17 @@ public class TokenizeContextImp implements TokenizeContext {
   }
 
   @Override
-  public void flushCodePointsConsumedAsACharacterReference() {
-    // TODO
+  public void flushCodePointsConsumedAsACharacterReference(ParseContext parseContext) {
+    String valueToFlush = temporaryBuffer.get();
+    if (returnState.equals(TokenizeStates.dataState)) {
+      for (int i = 0; i < valueToFlush.length(); i++) {
+        parseContext.emitCharacterToken(valueToFlush.codePointAt(i));
+      }
+    } else {
+      for (int i = 0; i < valueToFlush.length(); i++) {
+        currentTagToken().appendToAttributeValue(valueToFlush.codePointAt(i));
+      }
+    }
   }
 
   private class TemporaryBufferImp implements TemporaryBuffer {
@@ -111,6 +121,11 @@ public class TokenizeContextImp implements TokenizeContext {
     @Override
     public void append(int ch) {
       buffer.appendCodePoint(ch);
+    }
+
+    @Override
+    public void append(String str) {
+      buffer.append(str);
     }
 
     @Override
