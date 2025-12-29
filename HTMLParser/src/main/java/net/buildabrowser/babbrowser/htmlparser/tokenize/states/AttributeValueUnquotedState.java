@@ -15,7 +15,10 @@ public class AttributeValueUnquotedState implements TokenizeState {
       case '\t', '\n', '\f', ' ':
         tokenizeContext.setTokenizeState(TokenizeStates.beforeAttributeNameState);
         break;
-      // TODO: Character reference
+      case '&':
+        tokenizeContext.setReturnState(this);
+        tokenizeContext.setTokenizeState(TokenizeStates.characterReferenceState);
+        break;
       case '>':
         tokenizeContext.setTokenizeState(TokenizeStates.dataState);
         parseContext.emitTagToken(tokenizeContext.currentTagToken());

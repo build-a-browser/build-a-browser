@@ -19,6 +19,7 @@ public class NumericCharacterReferenceState implements TokenizeState {
         break;
       default:
         tokenizeContext.reconsumeInTokenizeState(ch, TokenizeStates.decimalCharacterReferenceStartState);
+        break;
     }
   }
   

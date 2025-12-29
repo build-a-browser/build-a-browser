@@ -16,7 +16,10 @@ public class AttributeValueSingleQuotedState implements TokenizeState {
       case '\'':
         tokenizeContext.setTokenizeState(TokenizeStates.afterAttributeValueQuotedState);
         break;
-      // TODO: Character reference state
+      case '&':
+        tokenizeContext.setReturnState(this);
+        tokenizeContext.setTokenizeState(TokenizeStates.characterReferenceState);
+        break;
       case 0:
         parseContext.parseError();
         tokenizeContext.currentTagToken().appendToAttributeValue(0xFFFD);
