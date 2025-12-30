@@ -11,6 +11,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.JPanel;
 
@@ -96,6 +97,12 @@ public class RendererImp implements Renderer {
 
       return jpanel;
     }
+  }
+
+  @Override
+  public Optional<String> getTitle() {
+    // TODO: Implement
+    return Optional.empty();
   }
 
   private StyleSheetList loadUAStyleSheets() throws IOException {
