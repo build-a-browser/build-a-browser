@@ -4,6 +4,7 @@ import net.buildabrowser.babbrowser.browser.render.box.Box;
 import net.buildabrowser.babbrowser.browser.render.box.BoxContent;
 import net.buildabrowser.babbrowser.browser.render.box.ElementBox;
 import net.buildabrowser.babbrowser.browser.render.box.ElementBoxDimensions;
+import net.buildabrowser.babbrowser.browser.render.content.flow.floatbox.FloatTracker;
 import net.buildabrowser.babbrowser.browser.render.content.flow.fragment.ManagedBoxFragment;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutConstraint;
 import net.buildabrowser.babbrowser.browser.render.layout.LayoutContext;
@@ -15,6 +16,7 @@ public class FlowRootContent implements BoxContent {
 
   private final FlowBlockLayout blockLayout;
   private final FlowInlineLayout inlineLayout;
+  private final FloatTracker floatTracker;
 
   private ManagedBoxFragment rootFragment;
 
@@ -22,6 +24,7 @@ public class FlowRootContent implements BoxContent {
     this.rootBox = box;
     this.blockLayout = new FlowBlockLayout(this);
     this.inlineLayout = new FlowInlineLayout(this);
+    this.floatTracker = FloatTracker.create();
   }
 
   @Override
@@ -34,12 +37,14 @@ public class FlowRootContent implements BoxContent {
 
     ElementBoxDimensions dimensions = rootBox.dimensions();
 
+    floatTracker.reset();
     blockLayout.reset(rootBox);
     blockLayout.addChildrenToBlock(
       layoutContext, rootBox, LayoutConstraint.MIN_CONTENT, LayoutConstraint.AUTO);
     dimensions.setPreferredMinWidthConstraint(
       blockLayout.close(LayoutConstraint.MIN_CONTENT, LayoutConstraint.AUTO).width());
 
+    floatTracker.reset();
     blockLayout.reset(rootBox);
     blockLayout.addChildrenToBlock(
       layoutContext, rootBox, LayoutConstraint.MAX_CONTENT, LayoutConstraint.AUTO);
@@ -51,6 +56,8 @@ public class FlowRootContent implements BoxContent {
   public void layout(
     LayoutContext layoutContext, LayoutConstraint widthConstraint, LayoutConstraint heightConstraint
   ) {
+    floatTracker.reset();
+
     blockLayout.reset(rootBox);
     blockLayout.addChildrenToBlock(layoutContext, rootBox, widthConstraint, heightConstraint);
 
@@ -69,6 +76,10 @@ public class FlowRootContent implements BoxContent {
 
   FlowInlineLayout inlineLayout() {
     return this.inlineLayout;
+  }
+
+  FloatTracker floatTracker() {
+    return this.floatTracker;
   }
 
   // For testing
